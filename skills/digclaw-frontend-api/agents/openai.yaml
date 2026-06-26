@@ -1,0 +1,4 @@
+interface:
+  display_name: "DigClaw Frontend API"
+  short_description: "Use DigClaw page-facing API routes without legacy endpoint noise."
+  default_prompt: "Use the DigClaw frontend API skill to identify the current page-facing endpoint, request root, auth headers, and frontend wrapper function before changing or calling a DigClaw API."
