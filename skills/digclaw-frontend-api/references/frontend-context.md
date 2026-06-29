@@ -6,6 +6,8 @@ This skill was derived from `diggenai_web`, a Vue 2 + Element UI frontend. The A
 
 Do not copy all backend controllers into this skill. Missing endpoints may be historical, backend-only, or unused.
 
+The intended operating mode is API-first. Use direct HTTP requests to provide capabilities equivalent to the frontend pages. Do not operate the product by opening the browser and clicking through pages unless the user specifically asks for visual UI testing.
+
 ## Environment
 
 Production:
@@ -37,6 +39,22 @@ All normal calls go through `src/utils/request.js`.
 - POST/PUT bodies use `data` unless the wrapper function explicitly uses `params`
 - Default timeout is 60 seconds; selected long-running search/upload calls set longer timeouts
 - Response success is application `code === 200`; `401` clears login state
+
+## Direct API Helper
+
+Use `scripts/digclaw_request.py` from the skill directory to call the same endpoints the frontend uses.
+
+Examples:
+
+```powershell
+$env:DIGCLAW_ACCESS_TOKEN = "<token>"
+python scripts\digclaw_request.py --method GET --path /chat/talents/v2/favorite/list
+python scripts\digclaw_request.py --method GET --path /chat/company-vector/detail --params '{"companyId":123}'
+python scripts\digclaw_request.py --method POST --path /chat/company-vector/search --data '{"keywords":["AI"]}'
+python scripts\digclaw_request.py --base insight --method GET --path /events/rank --params '{"limit":10}'
+```
+
+Use `--base chat` for normal `/chat/...` paths, `--base insight` for Insight paths, or `--base-url` for a custom environment.
 
 ## Install From GitHub
 
