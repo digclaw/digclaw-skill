@@ -1,6 +1,12 @@
-# DigClaw Frontend API Release Notes
+# DigClaw Skill Release Notes
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
+
+## 0.5.1 - 2026-06-30
+
+- Renamed the skill metadata name from `digclaw-frontend-api` to `digclaw-skill`.
+- Updated UI-facing agent metadata to display `DigClaw Skill`.
+- Kept the existing `skills/digclaw-frontend-api` install path so current auto-update checks remain compatible.
 
 ## 0.5.0 - 2026-06-30
 

@@ -1,11 +1,11 @@
 {
-  "name": "digclaw-frontend-api",
-  "version": "0.5.0",
+  "name": "digclaw-skill",
+  "version": "0.5.1",
   "updated_at": "2026-06-30",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Adds persistent local login sessions and requires contextual next-action suggestions after successful operations."
+  "summary": "Renames the skill display and metadata name from digclaw-frontend-api to digclaw-skill while preserving the existing install path for updates."
 }

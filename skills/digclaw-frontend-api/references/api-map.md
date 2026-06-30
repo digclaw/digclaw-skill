@@ -1,4 +1,4 @@
-# DigClaw Frontend API Map
+# DigClaw Skill API Map
 
 Use the production host `https://v3-api.diggen.cn` for `/chat/...` paths and `https://v3-api.diggen.cn/insight` for Insight paths.
 

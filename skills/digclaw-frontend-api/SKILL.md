@@ -1,9 +1,9 @@
 ---
-name: digclaw-frontend-api
+name: digclaw-skill
 description: Use when operating DigClaw through the same API-backed capabilities exposed by the Vue frontend, working on DigClaw frontend API calls, backend integration, request debugging, or agent tasks that need page-facing DigClaw functions without browser clicking or legacy unused endpoints.
 ---
 
-# DigClaw Frontend API
+# DigClaw Skill
 
 ## Overview
 
