@@ -27,7 +27,7 @@ Use this index first. The current frontend is route `/` -> `src/views/home.vue`;
 
 1. Identify the page from the user's wording or the UI label.
 2. Read that page guide before using `api-map.md`.
-3. Run `python scripts\check_permission.py --page <permission-key>` and continue only when `allowed` is `true`.
+3. Run `python scripts\check_permission.py --page <permission-key>` and continue only when `allowed` is `true`; this uses the cached login session when available.
 4. Execute the page operation sequence, including polling and refresh calls.
 5. Use `api-details.md` only for parameter examples and response examples.
 6. If an API helper exists but is not imported by the current page or its active child components, treat it as legacy or backend-only.
@@ -49,3 +49,4 @@ For full rules, read `permission-policy.md`. If the helper denies access, do not
 - File uploads usually require `GET /chat/file/getTemporaryToken`, OSS upload, then a page-specific register/update API.
 - Mutations should refresh the same list/detail data the page refreshes.
 - Async work should be submitted, polled to terminal state, then followed by page refresh calls.
+- After returning results to the user, suggest a few page-relevant next actions.

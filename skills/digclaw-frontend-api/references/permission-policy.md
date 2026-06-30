@@ -25,7 +25,7 @@ Run the helper before page-level operations:
 python scripts\check_permission.py --page smart-search
 ```
 
-The helper prints JSON. Continue only when `allowed` is `true`. A denied check exits with code `2` unless `--soft` is used.
+The helper prints JSON. Continue only when `allowed` is `true`. It uses `--token`, `DIGCLAW_ACCESS_TOKEN`, or the cached local session in that order. A denied check exits with code `2` unless `--soft` is used.
 
 ## Page Rules
 
@@ -49,5 +49,6 @@ The helper prints JSON. Continue only when `allowed` is `true`. A denied check e
 - Deny by default for unknown pages, missing token, failed permission calls, or missing required functions.
 - Do not call backend APIs just because the backend accepts them. The frontend permission model is the authority for this skill.
 - Re-check permissions after login, account switching, or token changes.
+- Reuse the cached session for repeated operations until the server rejects it.
 - For multi-step workflows, one page-level check is enough unless the workflow crosses into another page or a Smart Search subfeature.
 - For Smart Search, check both the page and the specific subfeature when the action uses company search or curated-list APIs.

@@ -8,6 +8,8 @@ import sys
 import urllib.error
 import urllib.request
 
+from digclaw_session import clear_session, resolve_token
+
 
 BASE_URL = "https://v3-api.diggen.cn"
 DEFAULT_CLIENT_ID = "b7bf1120a216184a9e0f4ca0e9c508bb"
@@ -152,39 +154,45 @@ def decide(page, context):
 def main():
     parser = argparse.ArgumentParser(description="Enforce DigClaw frontend page permission gates before API use.")
     parser.add_argument("--page", required=True, choices=sorted(PAGE_RULES.keys()), help="Frontend page or subfeature key")
-    parser.add_argument("--token", default=os.environ.get("DIGCLAW_ACCESS_TOKEN"), help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN")
+    parser.add_argument("--token", help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN or the cached DigClaw session")
+    parser.add_argument("--no-session", action="store_true", help="Do not read the local DigClaw session cache")
+    parser.add_argument("--session-file", help="Override the local session cache path")
     parser.add_argument("--base-url", default=os.environ.get("DIGCLAW_BASE_URL", BASE_URL), help="DigClaw chat API host root")
     parser.add_argument("--clientid", default=os.environ.get("DIGCLAW_CLIENT_ID", DEFAULT_CLIENT_ID), help="DigClaw clientid header")
     parser.add_argument("--timeout", type=float, default=60.0, help="Request timeout in seconds")
     parser.add_argument("--soft", action="store_true", help="Always exit 0 after printing JSON, even when denied")
     args = parser.parse_args()
+    token, token_source, session = resolve_token(args.token, args.session_file, not args.no_session)
 
-    if not args.token:
+    if not token:
         print(json.dumps({
             "page": args.page,
             "allowed": False,
-            "reason": "DIGCLAW_ACCESS_TOKEN or --token is required before checking permissions.",
+            "reason": "A token is required before checking permissions. Run scripts/digclaw_login.py once to cache a session, or pass --token.",
         }, ensure_ascii=False, indent=2))
         sys.exit(0 if args.soft else 2)
 
     try:
-        user_info = request_json("GET", args.base_url, "/chat/user/info", args.token, args.clientid, args.timeout)
-        permission = request_json("GET", args.base_url, "/chat/user/permission", args.token, args.clientid, args.timeout)
+        user_info = request_json("GET", args.base_url, "/chat/user/info", token, args.clientid, args.timeout)
+        permission = request_json("GET", args.base_url, "/chat/user/permission", token, args.clientid, args.timeout)
         context = build_context(user_info, permission)
         allowed, reason = decide(args.page, context)
         print(json.dumps({
             "page": args.page,
             "allowed": allowed,
             "reason": reason,
+            "tokenSource": token_source,
             **context,
         }, ensure_ascii=False, indent=2))
         if not allowed and not args.soft:
             sys.exit(2)
     except urllib.error.HTTPError as exc:
+        if exc.code in (401, 403) and token_source == "session":
+            clear_session(args.session_file)
         print(json.dumps({
             "page": args.page,
             "allowed": False,
-            "reason": f"Permission request failed with HTTP {exc.code}.",
+            "reason": f"Permission request failed with HTTP {exc.code}. Cached session was cleared if it was used; log in again.",
             "body": exc.read().decode("utf-8", errors="replace"),
         }, ensure_ascii=False, indent=2), file=sys.stderr)
         sys.exit(1)

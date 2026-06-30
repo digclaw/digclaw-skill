@@ -9,6 +9,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+from digclaw_session import clear_session, resolve_token
+
 
 CHAT_BASE_URL = "https://v3-api.diggen.cn"
 INSIGHT_BASE_URL = "https://v3-api.diggen.cn/insight"
@@ -56,10 +58,13 @@ def main():
     parser.add_argument("--base-url", help="Override the API base URL")
     parser.add_argument("--params", help="JSON object encoded as query params")
     parser.add_argument("--data", help="JSON request body")
-    parser.add_argument("--token", default=os.environ.get("DIGCLAW_ACCESS_TOKEN"), help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN")
+    parser.add_argument("--token", help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN or the cached DigClaw session")
+    parser.add_argument("--no-session", action="store_true", help="Do not read the local DigClaw session cache")
+    parser.add_argument("--session-file", help="Override the local session cache path")
     parser.add_argument("--clientid", default=os.environ.get("DIGCLAW_CLIENT_ID", DEFAULT_CLIENT_ID), help="DigClaw clientid header")
     parser.add_argument("--timeout", type=float, default=60.0, help="Request timeout in seconds")
     args = parser.parse_args()
+    token, token_source, session = resolve_token(args.token, args.session_file, not args.no_session)
 
     params = parse_json_arg(args.params, "--params")
     data = parse_json_arg(args.data, "--data")
@@ -72,8 +77,8 @@ def main():
         "Accept": "application/json",
         "clientid": args.clientid,
     }
-    if args.token:
-        headers["Authorization"] = "Bearer " + args.token
+    if token:
+        headers["Authorization"] = "Bearer " + token
     if data is not None:
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
         headers["Content-Type"] = "application/json;charset=utf-8"
@@ -86,6 +91,9 @@ def main():
             pretty_print_response(response.status, response.headers, response.read())
     except urllib.error.HTTPError as exc:
         print(f"HTTP {exc.code} {exc.reason}", file=sys.stderr)
+        if exc.code in (401, 403) and token_source == "session":
+            clear_session(args.session_file)
+            print("Cached DigClaw session was rejected and has been cleared. Log in again with scripts/digclaw_login.py.", file=sys.stderr)
         pretty_print_response(exc.code, exc.headers, exc.read())
         sys.exit(1)
     except urllib.error.URLError as exc:

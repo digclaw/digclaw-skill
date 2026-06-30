@@ -2,6 +2,13 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.5.0 - 2026-06-30
+
+- Added `scripts/digclaw_session.py` for persistent local session caching after login.
+- Updated `digclaw_login.py` to cache access token and user context by default without storing passwords.
+- Updated `check_permission.py` and `digclaw_request.py` to reuse cached sessions and clear them when the server rejects a cached token.
+- Added `references/session-and-next-actions.md` and required contextual next-step suggestions after successful user operations.
+
 ## 0.4.0 - 2026-06-30
 
 - Added `references/permission-policy.md` with the frontend-derived account-type and page permission rules.

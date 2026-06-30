@@ -1,4 +1,4 @@
 interface:
   display_name: "DigClaw Frontend API"
-  short_description: "Operate DigClaw through permitted frontend-backed APIs without browser clicks."
-  default_prompt: "Use the DigClaw frontend API skill to perform the requested DigClaw page-equivalent function through direct API calls, enforcing frontend permission gates before business API calls and avoiding browser clicking unless visual UI testing is explicitly requested."
+  short_description: "Operate DigClaw through permitted frontend-backed APIs with cached login."
+  default_prompt: "Use the DigClaw frontend API skill to perform the requested DigClaw page-equivalent function through direct API calls, reusing the cached login session when valid, enforcing frontend permission gates before business API calls, avoiding browser clicking unless visual UI testing is explicitly requested, and ending successful operations with practical next-action suggestions."
