@@ -39,6 +39,16 @@ Use `VERSION.json` as the installed skill version source. Use `scripts/check_upd
 
 Do not use browser page clicks to operate DigClaw unless the user explicitly asks for visual inspection or UI debugging. Prefer direct API operations that mirror frontend page functions.
 
+## Authentication
+
+Current authenticated calls use `DIGCLAW_ACCESS_TOKEN` or `--token`. If no token is available and the user authorizes login, call the frontend-equivalent login helper:
+
+```bash
+python scripts/digclaw_login.py --account-num <accountNum> --password <password>
+```
+
+The helper posts to `/appAuth/login` with `accountNum`, `password`, `clientId`, and `grantType: appPwd`, then loads `/chat/user/info`, `/chat/user/permission`, and `/chat/user/settings`. It masks the token by default. Use `--token-only` when a follow-up command needs a token in the same shell, or `--include-token` only when the operator explicitly needs the raw token displayed.
+
 Use the bundled request helper:
 
 ```bash
@@ -73,6 +83,7 @@ python scripts/digclaw_request.py --help
 - `references/release-notes.md`: version changes to read after `check_updates.py` reports an update
 - `VERSION.json`: machine-readable installed skill version metadata
 - `scripts/check_updates.py`: compare/pull the latest GitHub skill version
+- `scripts/digclaw_login.py`: frontend-equivalent login and user context helper
 - `scripts/digclaw_request.py`: direct HTTP helper for page-equivalent API operations
 
 ## Guardrails

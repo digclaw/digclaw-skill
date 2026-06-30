@@ -1,11 +1,11 @@
 {
   "name": "digclaw-frontend-api",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "updated_at": "2026-06-30",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Improves version-aware update checks by preferring git remote metadata and keeps the frontend-verified API workflow documentation current."
+  "summary": "Adds a frontend-equivalent login helper so agents can obtain login context through /appAuth/login."
 }

@@ -40,9 +40,28 @@ All normal calls go through `src/utils/request.js`.
 - Default timeout is 60 seconds; selected long-running search/upload calls set longer timeouts
 - Response success is application `code === 200`; `401` clears login state
 
+## Login State
+
+The frontend does not infer login state from cookies alone. It stores the login token in `localStorage.access_token`, mirrors it into Vuex `state.user.token`, and sends it as `Authorization: Bearer <access_token>` on later requests.
+
+Frontend login call:
+
+- Method/path: `POST /appAuth/login`
+- Body: `accountNum`, `password`, `clientId`, `grantType: "appPwd"`
+- Success data used by the page: `data.access_token`, `data.userId`
+- After login: call user bootstrap endpoints such as `/chat/user/info`, `/chat/user/permission`, `/chat/user/settings`, and OSS token when uploads are needed.
+
 ## Direct API Helper
 
 Use `scripts/digclaw_request.py` from the skill directory to call the same endpoints the frontend uses.
+
+Use `scripts/digclaw_login.py` when an agent needs to obtain login information through the login API:
+
+```powershell
+$env:DIGCLAW_ACCOUNT_NUM = "<accountNum>"
+$env:DIGCLAW_PASSWORD = "<password>"
+python scripts\digclaw_login.py
+```
 
 Examples:
 

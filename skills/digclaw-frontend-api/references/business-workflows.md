@@ -35,8 +35,10 @@ Bootstrap after token exists:
 Login/register:
 
 1. `POST /appAuth/login` or `POST /appAuth/register`.
-2. Store the token as `Authorization: Bearer <token>` for later requests.
-3. Run the bootstrap sequence above.
+2. For login, send the same body as the frontend: `accountNum`, `password`, `clientId`, and `grantType: "appPwd"`.
+3. Read `data.access_token` and `data.userId`.
+4. Store/use the token as `Authorization: Bearer <access_token>` for later requests.
+5. Run the bootstrap sequence above.
 
 Meeting-minute upload and management from the shell:
 

@@ -18,6 +18,53 @@ Success responses usually use:
 }
 ```
 
+## Auth And Login
+
+### Login
+
+`POST /appAuth/login`
+
+The current frontend sends:
+
+| Name | Type | Notes |
+|---|---|---|
+| `accountNum` | string | user account |
+| `password` | string | raw password from the login form |
+| `clientId` | string | frontend client id, default `b7bf1120a216184a9e0f4ca0e9c508bb` |
+| `grantType` | string | current frontend uses `appPwd` |
+
+Example:
+
+```powershell
+python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>"
+```
+
+Direct request equivalent:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /appAuth/login --data '{"accountNum":"<accountNum>","password":"<password>","clientId":"b7bf1120a216184a9e0f4ca0e9c508bb","grantType":"appPwd"}'
+```
+
+Response example:
+
+```json
+{
+  "code": 200,
+  "data": {
+    "access_token": "<token>",
+    "userId": "12345"
+  }
+}
+```
+
+After login, pass the token to later calls with `DIGCLAW_ACCESS_TOKEN` or `--token`, then bootstrap:
+
+```powershell
+python scripts\digclaw_request.py --method GET --path /chat/user/info --token "<token>"
+python scripts\digclaw_request.py --method GET --path /chat/user/permission --token "<token>"
+python scripts\digclaw_request.py --method GET --path /chat/user/settings --token "<token>"
+```
+
 ## Talent V2
 
 ### List talents

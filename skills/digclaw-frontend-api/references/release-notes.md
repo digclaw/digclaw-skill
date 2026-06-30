@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.2.2 - 2026-06-30
+
+- Added `scripts/digclaw_login.py` to call `/appAuth/login` with the same fields as the frontend.
+- Documented that frontend login state is based on `localStorage.access_token` and `Authorization: Bearer <access_token>`.
+- Added login examples and bootstrap calls for user info, permissions, and settings.
+
 ## 0.2.1 - 2026-06-30
 
 - Updated `scripts/check_updates.py` to prefer `git fetch` plus `git show origin/main:.../VERSION.json` for version checks.
