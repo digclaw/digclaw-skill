@@ -1,6 +1,8 @@
 # DigClaw Source Bindings
 
-This skill is bound to the frontend and backend source baselines below. Use this file before updating API workflows, permission rules, page maps, or request examples.
+These bindings are developer-only maintenance metadata. They do not affect user installation or skill updates. Users and agents update the skill by comparing `VERSION.json.version` with `scripts/check_updates.py`; branch and commit bindings are only clues for developers optimizing the next skill version.
+
+This skill records the frontend and backend source baselines below. Use this file before updating API workflows, permission rules, page maps, or request examples.
 
 ## Bound Repositories
 
@@ -11,9 +13,9 @@ This skill is bound to the frontend and backend source baselines below. Use this
 
 Binding date: `2026-06-30`
 
-## Update Rule
+## Developer Maintenance Rule
 
-When the frontend or backend changes, do not assume this skill still matches the current system. First compare the current source repositories with `VERSION.json.source_bindings`.
+When the frontend or backend changes, do not assume this skill still matches the current system. First compare the current source repositories with `VERSION.json.source_bindings`. Do this only while developing or auditing the skill; do not use a mismatch to prevent normal users from updating the skill.
 
 Use:
 

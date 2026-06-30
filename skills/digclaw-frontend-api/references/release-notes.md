@@ -2,6 +2,11 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.6.1 - 2026-06-30
+
+- Clarified that user and agent update checks rely only on `VERSION.json.version`.
+- Marked frontend/backend source bindings as developer-only maintenance metadata that must not block skill installation or updates.
+
 ## 0.6.0 - 2026-06-30
 
 - Added `VERSION.json.source_bindings` for the audited frontend and backend branches, remotes, and commit IDs.

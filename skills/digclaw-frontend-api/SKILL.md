@@ -20,8 +20,8 @@ For detailed environment and request behavior, read `references/frontend-context
 
 ## Workflow
 
-1. Check for skill updates once per working session with `python scripts/check_updates.py`. If it reports a newer version and this skill is inside the official git checkout, run `python scripts/check_updates.py --pull`, then read `references/release-notes.md`.
-2. When maintaining or updating this skill, compare the local frontend/backend source repos with `python scripts/check_source_bindings.py`, then read `references/source-bindings.md` before trusting old page/API documentation.
+1. Check for skill updates once per working session with `python scripts/check_updates.py`. Normal user and agent updates are based only on `VERSION.json.version`. If it reports a newer version and this skill is inside the official git checkout, run `python scripts/check_updates.py --pull`, then read `references/release-notes.md`.
+2. When developing the next skill version or auditing page/API docs, compare the local frontend/backend source repos with `python scripts/check_source_bindings.py`, then read `references/source-bindings.md` before trusting old page/API documentation. Source bindings are developer maintenance context only; do not use them to block user installation or updates.
 3. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, permission gates, and page keys.
 4. Enforce the frontend permission gate with `python scripts/check_permission.py --page <page-key>`. This uses the cached login session when no token is passed. If it is denied, stop and explain that the current account cannot use the requested page or feature.
 5. Read exactly one page guide for the target page: `page-smart-search.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
@@ -36,7 +36,7 @@ For detailed environment and request behavior, read `references/frontend-context
 
 ## Version Updates
 
-Use `VERSION.json` as the installed skill version source. Use `scripts/check_updates.py --json` when another agent needs machine-readable update status. If auto-pull is unavailable because the skill was copied rather than cloned from GitHub, report the latest version and ask the operator to reinstall or update from `https://github.com/digclaw/digclaw-skill.git`.
+Use `VERSION.json.version` as the installed skill version source. Use `scripts/check_updates.py --json` when another agent needs machine-readable update status. Source bindings in `VERSION.json` are not part of update eligibility; they are only for maintainers to know which frontend/backend commits were audited. If auto-pull is unavailable because the skill was copied rather than cloned from GitHub, report the latest version and ask the operator to reinstall or update from `https://github.com/digclaw/digclaw-skill.git`.
 
 ## API Operation
 
@@ -96,7 +96,7 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - `references/page-operation-index.md`: page-first map from UI labels/routes to operation guides
 - `references/permission-policy.md`: frontend account-type and page permission enforcement rules
 - `references/session-and-next-actions.md`: local login session reuse and user-facing next-action prompts
-- `references/source-bindings.md`: bound frontend/backend branches and commit IDs for this skill version
+- `references/source-bindings.md`: developer-only bound frontend/backend branches and commit IDs for this skill version
 - `references/page-shell-auth-files.md`: shell login, bootstrap, meeting minutes, user/system utilities
 - `references/page-smart-search.md`: Smart Search and Company Cloud operations
 - `references/page-talent-matrix.md`: Talent Matrix operations
@@ -113,7 +113,7 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - `references/release-notes.md`: version changes to read after `check_updates.py` reports an update
 - `VERSION.json`: machine-readable installed skill version metadata
 - `scripts/check_updates.py`: compare/pull the latest GitHub skill version
-- `scripts/check_source_bindings.py`: compare local frontend/backend repos with `VERSION.json` source bindings
+- `scripts/check_source_bindings.py`: compare local frontend/backend repos with developer-only `VERSION.json` source bindings
 - `scripts/check_permission.py`: enforce frontend page permission gates before API calls
 - `scripts/digclaw_session.py`: shared local session cache support for helper scripts
 - `scripts/digclaw_login.py`: frontend-equivalent login and user context helper

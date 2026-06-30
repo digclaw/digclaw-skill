@@ -1,14 +1,16 @@
 {
   "name": "digclaw-skill",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "updated_at": "2026-06-30",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Binds this skill version to the audited frontend and backend source branches and commit IDs for safer future updates.",
+  "summary": "Clarifies that frontend/backend source bindings are developer maintenance metadata and normal skill updates use the skill version only.",
   "source_bindings": {
+    "purpose": "developer-maintenance-only",
+    "user_update_policy": "Users and agents should update this skill by comparing VERSION.json.version only. Source bindings must not block installation or updates.",
     "bound_at": "2026-06-30",
     "frontend": {
       "name": "digclaw-web",
