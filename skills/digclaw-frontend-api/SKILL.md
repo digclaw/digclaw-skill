@@ -21,15 +21,15 @@ For detailed environment and request behavior, read `references/frontend-context
 ## Workflow
 
 1. Check for skill updates once per working session with `python scripts/check_updates.py`. If it reports a newer version and this skill is inside the official git checkout, run `python scripts/check_updates.py --pull`, then read `references/release-notes.md`.
-2. Identify the user-facing DigClaw function: search, talent, memo, investor, industry, admin account, report, comment, member, payment, or settings.
-3. Read `references/frontend-page-audit.md` when unsure which current page owns a function or whether a page is current versus legacy.
-4. Read `references/business-workflows.md` first for execution. Page actions often require multiple calls, polling, and a final refresh.
-5. Read `references/api-details.md` for request parameters, request examples, response examples, and status meanings.
-6. Use `references/api-map.md` only as the compact endpoint index.
+2. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, and permissions.
+3. Read exactly one page guide for the target page: `page-smart-search.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
+4. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
+5. Use `references/api-details.md` only when request/response examples or field shapes are needed.
+6. Use `references/api-map.md` as a compact endpoint index after the page guide, not as the primary workflow source.
 7. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
 8. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
 9. Verify the API response and summarize the result in user-facing terms.
-10. If an endpoint is not in the frontend-facing map, verify that a current page imports it before documenting or using it.
+10. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
 
 ## Version Updates
 
@@ -63,18 +63,26 @@ python scripts/digclaw_request.py --help
 
 ## Page Domains
 
-- Auth, user profile, settings, coins, orders, conversations, meeting minutes
-- Shared/company data, comments, document members, company annotations
-- Smart search for companies and talent
-- Talent V2 list, detail, favorites, annotations, connection status, export
-- Project Memo, attachments, content paragraphs, FA collaboration, report tasks
-- Investor parsing, investor CRUD, attachments, opinions
-- AI analysis second-task workflows
-- Industry Insight event, person, and opinion dashboards
-- Admin account and account-type management
+- Shell/Auth/Files: login, user profile, settings, conversations, meeting minutes, file tokens
+- Smart Search / Company Cloud: company and talent search, history, detail, members, export, CSV tasks
+- Talent Matrix: talent list/detail, favorites, annotations, connection status, connection text, export
+- Project Connectivity: project memo list/detail, paragraphs, attachments, reports, second analysis, FA collaboration
+- Venture Investment Directory: investor parse tasks, investor CRUD, attachments, opinions
+- Industry Analysis: insight events, leader people, viewpoints
+- Account Administration: admin users and account types
+- Special/hidden pages: AI Sourcing, standalone AI Analysis, selected company list, direct CSV task entry
 
 ## References
 
+- `references/page-operation-index.md`: page-first map from UI labels/routes to operation guides
+- `references/page-shell-auth-files.md`: shell login, bootstrap, meeting minutes, user/system utilities
+- `references/page-smart-search.md`: Smart Search and Company Cloud operations
+- `references/page-talent-matrix.md`: Talent Matrix operations
+- `references/page-project-connectivity.md`: Project Connectivity, memo, FA, and reports
+- `references/page-venture-directory.md`: Venture Investment Directory operations
+- `references/page-industry-analysis.md`: Industry Insight page operations
+- `references/page-admin-accounts.md`: Account Administration operations
+- `references/page-ai-sourcing-analysis.md`: special/hidden AI Sourcing and standalone AI Analysis operations
 - `references/business-workflows.md`: page-equivalent multi-request business flows
 - `references/api-details.md`: parameters, examples, response shapes, and polling statuses
 - `references/frontend-page-audit.md`: current route/page/component audit and ownership notes

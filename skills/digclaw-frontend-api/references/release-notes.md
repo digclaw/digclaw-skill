@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.3.0 - 2026-06-30
+
+- Replanned the skill around frontend page modules instead of endpoint-first lookup.
+- Added `page-operation-index.md` and per-page guides for Shell/Auth/Files, Smart Search, Talent Matrix, Project Connectivity, Venture Directory, Industry Analysis, Admin Accounts, and special/hidden AI Sourcing plus standalone AI Analysis pages.
+- Updated `SKILL.md` so agents choose the page guide first, then use API details and the endpoint map as supporting references.
+
 ## 0.2.2 - 2026-06-30
 
 - Added `scripts/digclaw_login.py` to call `/appAuth/login` with the same fields as the frontend.
