@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.2.1 - 2026-06-30
+
+- Updated `scripts/check_updates.py` to prefer `git fetch` plus `git show origin/main:.../VERSION.json` for version checks.
+- Kept raw GitHub URL checking as a fallback for non-git installs.
+- This makes update checks work even when GitHub raw access is unavailable but git credentials are configured.
+
 ## 0.2.0 - 2026-06-30
 
 - Added `VERSION.json` for machine-readable skill version metadata.

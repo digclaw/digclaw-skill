@@ -80,6 +80,43 @@ def pull_latest(repo_root, branch):
     )
 
 
+def fetch_git_version(local):
+    repo_root = find_git_root(SKILL_DIR)
+    if not repo_root:
+        return None, "not inside a git checkout"
+
+    matches, remote_info = git_remote_matches(repo_root)
+    if not matches:
+        return None, f"origin is not the official repo ({remote_info})"
+
+    branch = local.get("branch", "main")
+    skill_path = local.get("skill_path", "skills/digclaw-frontend-api")
+    fetch = subprocess.run(
+        ["git", "-C", str(repo_root), "fetch", "origin", branch, "--quiet"],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if fetch.returncode != 0:
+        return None, (fetch.stdout + fetch.stderr).strip() or "git fetch failed"
+
+    show = subprocess.run(
+        ["git", "-C", str(repo_root), "show", f"origin/{branch}:{skill_path}/VERSION.json"],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if show.returncode != 0:
+        return None, (show.stdout + show.stderr).strip() or "git show failed"
+
+    try:
+        return json.loads(show.stdout), None
+    except json.JSONDecodeError as exc:
+        return None, f"remote VERSION.json is invalid JSON: {exc}"
+
+
 def main():
     parser = argparse.ArgumentParser(description="Check for DigClaw skill updates.")
     parser.add_argument("--local-version", default=str(DEFAULT_LOCAL_VERSION), help="Path to local VERSION.json")
@@ -94,12 +131,16 @@ def main():
     except OSError as exc:
         raise SystemExit(f"Cannot read local version file: {exc}") from exc
 
-    try:
-        remote = fetch_json(args.latest_url, args.timeout)
-        remote_error = None
-    except (urllib.error.URLError, json.JSONDecodeError) as exc:
-        remote = None
-        remote_error = str(exc)
+    remote, git_error = fetch_git_version(local)
+    remote_error = git_error
+    if remote is None:
+        try:
+            remote = fetch_json(args.latest_url, args.timeout)
+            remote_error = None
+        except (urllib.error.URLError, json.JSONDecodeError) as exc:
+            remote = None
+            raw_error = str(exc)
+            remote_error = f"git: {git_error}; raw: {raw_error}" if git_error else raw_error
 
     local_version = local.get("version", "0.0.0")
     remote_version = remote.get("version") if remote else None
