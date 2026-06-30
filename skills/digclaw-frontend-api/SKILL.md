@@ -20,14 +20,15 @@ For detailed environment and request behavior, read `references/frontend-context
 
 ## Workflow
 
-1. Identify the user-facing DigClaw function: search, talent, memo, investor, admin account, report, comment, member, payment, or settings.
-2. Read `references/business-workflows.md` first. Page actions often require multiple calls, polling, and a final refresh.
-3. Read `references/api-details.md` for request parameters, request examples, response examples, and status meanings.
-4. Use `references/api-map.md` only as the compact endpoint index.
-5. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
-6. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
-7. Verify the API response and summarize the result in user-facing terms.
-8. If an endpoint is not in the frontend-facing map, verify that a current page imports it before documenting or using it.
+1. Identify the user-facing DigClaw function: search, talent, memo, investor, industry, admin account, report, comment, member, payment, or settings.
+2. Read `references/frontend-page-audit.md` when unsure which current page owns a function or whether a page is current versus legacy.
+3. Read `references/business-workflows.md` first for execution. Page actions often require multiple calls, polling, and a final refresh.
+4. Read `references/api-details.md` for request parameters, request examples, response examples, and status meanings.
+5. Use `references/api-map.md` only as the compact endpoint index.
+6. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
+7. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
+8. Verify the API response and summarize the result in user-facing terms.
+9. If an endpoint is not in the frontend-facing map, verify that a current page imports it before documenting or using it.
 
 ## API Operation
 
@@ -61,6 +62,7 @@ python scripts/digclaw_request.py --help
 
 - `references/business-workflows.md`: page-equivalent multi-request business flows
 - `references/api-details.md`: parameters, examples, response shapes, and polling statuses
+- `references/frontend-page-audit.md`: current route/page/component audit and ownership notes
 - `references/frontend-context.md`: project context, inferred API roots, request wrapper behavior
 - `references/api-map.md`: frontend-used API functions grouped by page feature
 - `scripts/digclaw_request.py`: direct HTTP helper for page-equivalent API operations

@@ -129,7 +129,7 @@ Use the production host `https://v3-api.diggen.cn` for `/chat/...` paths and `ht
 | Toggle interest | `talentToggleInterestAPI` | POST | `/chat/talents/v2/toggle-interest` |
 | Annotation list | `annotationListAPI` | GET | `/chat/talents/v2/annotation/list` |
 | Add annotation | `annotationUpdateAPI` | POST | `/chat/talents/v2/annotation/add?talentId={id}` |
-| Add favorite folder | `favoriteAddAPI` | POST | `/chat/talents/v2/favorite` |
+| Add favorite folder helper (not used by current Talent page; current page creates folders through search task) | `favoriteAddAPI` | POST | `/chat/talents/v2/favorite` |
 | Favorite folders | `favoriteListAPI` | GET | `/chat/talents/v2/favorite/list` |
 | Delete favorite folder | `favoriteDeleteAPI` | DELETE | `/chat/talents/v2/favorite/{id}` |
 | Start favorite search | `favoriteSearchStartAPI` | POST | `/chat/talents/v2/favorite/search-task` |
@@ -260,7 +260,7 @@ Insight paths use `https://v3-api.diggen.cn/insight`.
 | Update admin user | `updateAdminUser` | PUT | `/chat/admin/users/{id}` |
 | Reset admin password | `resetAdminUserPassword` | PUT | `/chat/admin/users/{id}/password` |
 | Update admin status | `updateAdminUserStatus` | PUT | `/chat/admin/users/{id}/status` |
-| Update admin expiry | `updateAdminUserExpiry` | PUT | `/chat/admin/users/{id}/expiry` |
+| Update admin expiry helper (not used by current Admin Accounts page; current page sends `accountValidUntil` in create/update) | `updateAdminUserExpiry` | PUT | `/chat/admin/users/{id}/expiry` |
 | Delete admin user | `deleteAdminUser` | DELETE | `/chat/admin/users/{id}` |
 | Account types | `listAccountTypes` | GET | `/chat/admin/account-types` |
 | Account type options | `accountTypeOptions` | GET | `/chat/admin/account-types/options` |
