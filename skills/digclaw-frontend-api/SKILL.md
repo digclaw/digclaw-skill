@@ -20,15 +20,20 @@ For detailed environment and request behavior, read `references/frontend-context
 
 ## Workflow
 
-1. Identify the user-facing DigClaw function: search, talent, memo, investor, industry, admin account, report, comment, member, payment, or settings.
-2. Read `references/frontend-page-audit.md` when unsure which current page owns a function or whether a page is current versus legacy.
-3. Read `references/business-workflows.md` first for execution. Page actions often require multiple calls, polling, and a final refresh.
-4. Read `references/api-details.md` for request parameters, request examples, response examples, and status meanings.
-5. Use `references/api-map.md` only as the compact endpoint index.
-6. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
-7. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
-8. Verify the API response and summarize the result in user-facing terms.
-9. If an endpoint is not in the frontend-facing map, verify that a current page imports it before documenting or using it.
+1. Check for skill updates once per working session with `python scripts/check_updates.py`. If it reports a newer version and this skill is inside the official git checkout, run `python scripts/check_updates.py --pull`, then read `references/release-notes.md`.
+2. Identify the user-facing DigClaw function: search, talent, memo, investor, industry, admin account, report, comment, member, payment, or settings.
+3. Read `references/frontend-page-audit.md` when unsure which current page owns a function or whether a page is current versus legacy.
+4. Read `references/business-workflows.md` first for execution. Page actions often require multiple calls, polling, and a final refresh.
+5. Read `references/api-details.md` for request parameters, request examples, response examples, and status meanings.
+6. Use `references/api-map.md` only as the compact endpoint index.
+7. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
+8. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
+9. Verify the API response and summarize the result in user-facing terms.
+10. If an endpoint is not in the frontend-facing map, verify that a current page imports it before documenting or using it.
+
+## Version Updates
+
+Use `VERSION.json` as the installed skill version source. Use `scripts/check_updates.py --json` when another agent needs machine-readable update status. If auto-pull is unavailable because the skill was copied rather than cloned from GitHub, report the latest version and ask the operator to reinstall or update from `https://github.com/digclaw/digclaw-skill.git`.
 
 ## API Operation
 
@@ -65,6 +70,9 @@ python scripts/digclaw_request.py --help
 - `references/frontend-page-audit.md`: current route/page/component audit and ownership notes
 - `references/frontend-context.md`: project context, inferred API roots, request wrapper behavior
 - `references/api-map.md`: frontend-used API functions grouped by page feature
+- `references/release-notes.md`: version changes to read after `check_updates.py` reports an update
+- `VERSION.json`: machine-readable installed skill version metadata
+- `scripts/check_updates.py`: compare/pull the latest GitHub skill version
 - `scripts/digclaw_request.py`: direct HTTP helper for page-equivalent API operations
 
 ## Guardrails

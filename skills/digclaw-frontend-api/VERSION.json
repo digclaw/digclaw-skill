@@ -1,0 +1,11 @@
+{
+  "name": "digclaw-frontend-api",
+  "version": "0.2.0",
+  "updated_at": "2026-06-30",
+  "repo": "https://github.com/digclaw/digclaw-skill.git",
+  "branch": "main",
+  "skill_path": "skills/digclaw-frontend-api",
+  "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
+  "release_notes": "references/release-notes.md",
+  "summary": "Adds version-aware update checks and keeps the frontend-verified API workflow documentation current."
+}
