@@ -2,6 +2,8 @@
 
 Source: `src/views/home.vue`, `src/api/login.js`, `src/utils/request.js`.
 
+Permission gate: `shell`. File-management-only actions use `file-management`.
+
 ## Responsibilities
 
 - Login/register and current login state.

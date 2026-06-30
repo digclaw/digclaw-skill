@@ -2,7 +2,7 @@
 
 Source: `Home/AdminAccounts.vue`, `src/api/adminAccount.js`.
 
-Access: `MASTER` or `Account Administration`.
+Permission gate: `admin-accounts`. Access requires `accountType === "MASTER"` or `Account Administration`.
 
 ## Responsibilities
 

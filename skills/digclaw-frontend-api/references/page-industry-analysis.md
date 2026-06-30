@@ -2,6 +2,8 @@
 
 Source: `Home/IndustryAnalyze.vue`, `LeaderPeopleTab.vue`, `ViewPointsTab.vue`, `EventDetailDialog.vue`, `LeaderDetailDialog.vue`, `OpinionDetailDialog.vue`.
 
+Permission gate: `industry-analysis`.
+
 ## Responsibilities
 
 - Industry event dashboard and event rank/search/pagination.

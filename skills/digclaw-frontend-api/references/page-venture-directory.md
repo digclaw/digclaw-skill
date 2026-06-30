@@ -2,6 +2,8 @@
 
 Source: `Home/Investors1.vue`, `InvestorAdd.vue`, `InvestorAttachments.vue`, `OpinionAdd.vue`, `OpinionEdit.vue`, `OpinionSelectInvestor.vue`, `InvestoParseTaskData.vue`.
 
+Permission gate: `venture-directory`.
+
 ## Responsibilities
 
 - Investor parse tasks from uploaded files or social links.

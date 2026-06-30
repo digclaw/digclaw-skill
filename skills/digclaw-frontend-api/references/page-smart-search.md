@@ -2,6 +2,8 @@
 
 Source: `Home/SmartSearch.vue`, `FindCompany.vue`, `FindCompanyResultList.vue`, `ElitedCompany.vue`, `ComapnyPanel.vue`, `TalentCard.vue`.
 
+Permission gate: `smart-search`. For company search operations also check `smart-search.company-search`; for curated-list operations also check `smart-search.curated-list`.
+
 ## Responsibilities
 
 - Company keyword search, natural-language search, advanced filters, business tags, China/non-China filters.

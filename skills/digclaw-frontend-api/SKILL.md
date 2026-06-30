@@ -21,15 +21,16 @@ For detailed environment and request behavior, read `references/frontend-context
 ## Workflow
 
 1. Check for skill updates once per working session with `python scripts/check_updates.py`. If it reports a newer version and this skill is inside the official git checkout, run `python scripts/check_updates.py --pull`, then read `references/release-notes.md`.
-2. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, and permissions.
-3. Read exactly one page guide for the target page: `page-smart-search.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
-4. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
-5. Use `references/api-details.md` only when request/response examples or field shapes are needed.
-6. Use `references/api-map.md` as a compact endpoint index after the page guide, not as the primary workflow source.
-7. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
-8. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
-9. Verify the API response and summarize the result in user-facing terms.
-10. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
+2. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, permission gates, and page keys.
+3. Enforce the frontend permission gate with `python scripts/check_permission.py --page <page-key>`. If it is denied, stop and explain that the current account cannot use the requested page or feature.
+4. Read exactly one page guide for the target page: `page-smart-search.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
+5. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
+6. Use `references/api-details.md` only when request/response examples or field shapes are needed.
+7. Use `references/api-map.md` as a compact endpoint index after the page guide, not as the primary workflow source.
+8. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
+9. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
+10. Verify the API response and summarize the result in user-facing terms.
+11. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
 
 ## Version Updates
 
@@ -61,6 +62,16 @@ For authenticated requests, set `DIGCLAW_ACCESS_TOKEN` in the environment or pas
 python scripts/digclaw_request.py --help
 ```
 
+## Permission Enforcement
+
+Frontend-visible permissions are mandatory. Before calling page business APIs, use:
+
+```bash
+python scripts/check_permission.py --page <page-key>
+```
+
+Read `references/permission-policy.md` for the page-key map and special subfeature rules. Never call backend APIs to bypass a page that the current account type cannot see in the frontend.
+
 ## Page Domains
 
 - Shell/Auth/Files: login, user profile, settings, conversations, meeting minutes, file tokens
@@ -75,6 +86,7 @@ python scripts/digclaw_request.py --help
 ## References
 
 - `references/page-operation-index.md`: page-first map from UI labels/routes to operation guides
+- `references/permission-policy.md`: frontend account-type and page permission enforcement rules
 - `references/page-shell-auth-files.md`: shell login, bootstrap, meeting minutes, user/system utilities
 - `references/page-smart-search.md`: Smart Search and Company Cloud operations
 - `references/page-talent-matrix.md`: Talent Matrix operations
@@ -91,12 +103,15 @@ python scripts/digclaw_request.py --help
 - `references/release-notes.md`: version changes to read after `check_updates.py` reports an update
 - `VERSION.json`: machine-readable installed skill version metadata
 - `scripts/check_updates.py`: compare/pull the latest GitHub skill version
+- `scripts/check_permission.py`: enforce frontend page permission gates before API calls
 - `scripts/digclaw_login.py`: frontend-equivalent login and user context helper
 - `scripts/digclaw_request.py`: direct HTTP helper for page-equivalent API operations
 
 ## Guardrails
 
 - Do not use browser clicks as the default way to perform DigClaw actions.
+- Do not bypass frontend permission/account-type gates; if `check_permission.py` denies access, stop before any business API call.
+- Deny by default when permission data is unavailable, stale, or does not include the requested page feature.
 - Do not treat a single endpoint as a complete page action until checking `business-workflows.md`.
 - Do not add backend-only or legacy endpoints unless a current page/component imports the API function.
 - Do not hard-code a user's token. Read `access_token` from runtime context or ask the operator to provide one.

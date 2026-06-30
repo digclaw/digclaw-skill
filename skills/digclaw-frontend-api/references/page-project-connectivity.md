@@ -2,6 +2,8 @@
 
 Source: `Home/NewMemoV3.vue`, `AppointmentModal.vue`, `AttachmentLIstDialog.vue`, `AIAnalyzeDialog.vue`, `InverestorSelect.vue`, `FaCooperationNotes.vue`, `MemoReportTaskHistory.vue`, `MemoReportViewDialog.vue`.
 
+Permission gate: `project-connectivity`.
+
 ## Responsibilities
 
 - Project memo list, detail, create/edit/delete, status, interest, leader filter.

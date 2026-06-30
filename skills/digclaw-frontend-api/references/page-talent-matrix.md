@@ -2,6 +2,8 @@
 
 Source: `Home/Talents.vue`, `AddCustomerFavorite.vue`, `TalentPanelType1/2/3.vue`, `TalentConnect.vue`.
 
+Permission gate: `talent-matrix`.
+
 ## Responsibilities
 
 - Talent V2 list, tags, status filters, member filters, sorting, infinite scroll.

@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.4.0 - 2026-06-30
+
+- Added `references/permission-policy.md` with the frontend-derived account-type and page permission rules.
+- Added `scripts/check_permission.py` so agents can verify the current token's page access before business API calls.
+- Updated `SKILL.md`, page index guidance, and agent metadata so denied frontend permissions stop execution even when backend endpoints would respond.
+
 ## 0.3.0 - 2026-06-30
 
 - Replanned the skill around frontend page modules instead of endpoint-first lookup.

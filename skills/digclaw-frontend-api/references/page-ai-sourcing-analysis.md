@@ -4,6 +4,8 @@ Source: `Home/share.vue`, `Home/ElitedCompany.vue`, `Home/AiAnalyze.vue`, `FindC
 
 These entries still exist in current code, but their sidebar menu items are commented or permission-hidden in `home.vue`. Use them only when the user explicitly asks about AI Sourcing, selected/legacy company lists, standalone AI analysis, file management, or old preview flows. For the visible company search experience, prefer `page-smart-search.md`.
 
+Permission gates: `ai-sourcing` for AI Sourcing / selected company list, `standalone-ai-analysis` for standalone AI Analysis, and `file-management` for file management actions.
+
 ## AI Sourcing / Selected Company List
 
 Current components: `Share.vue`, `ElitedCompany.vue`, `ComapnyPanel.vue`, `soucingDetailPanel.vue`.
