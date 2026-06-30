@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.6.0 - 2026-06-30
+
+- Added `VERSION.json.source_bindings` for the audited frontend and backend branches, remotes, and commit IDs.
+- Added `references/source-bindings.md` to explain how future skill updates should compare source changes before changing API workflows.
+- Added `scripts/check_source_bindings.py` to compare local frontend/backend checkouts with the bound commits.
+
 ## 0.5.1 - 2026-06-30
 
 - Renamed the skill metadata name from `digclaw-frontend-api` to `digclaw-skill`.

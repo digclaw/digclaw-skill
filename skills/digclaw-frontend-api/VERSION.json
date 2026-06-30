@@ -1,11 +1,30 @@
 {
   "name": "digclaw-skill",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "updated_at": "2026-06-30",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Renames the skill display and metadata name from digclaw-frontend-api to digclaw-skill while preserving the existing install path for updates."
+  "summary": "Binds this skill version to the audited frontend and backend source branches and commit IDs for safer future updates.",
+  "source_bindings": {
+    "bound_at": "2026-06-30",
+    "frontend": {
+      "name": "digclaw-web",
+      "remote": "https://github.com/digclaw/digclaw-web.git",
+      "branch": "v3_dev",
+      "commit": "5b656899fd197fd503349cf0d7108cd12eac5bef",
+      "local_audit_path": "G:\\digclaw_server\\diggenai_web",
+      "worktree": "clean"
+    },
+    "backend": {
+      "name": "digclaw-server",
+      "remote": "https://github.com/digclaw/digclaw-server.git",
+      "branch": "v3_dev",
+      "commit": "a07c2a3152fb2855ce539c47eaca61aabfab31a6",
+      "local_audit_path": "G:\\digclaw_server\\diggenai",
+      "worktree": "commit bound; untracked ruoyi-modules/vc-chat/tweitter/__pycache__/ was present locally and is not part of the binding"
+    }
+  }
 }

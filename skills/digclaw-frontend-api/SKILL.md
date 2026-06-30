@@ -21,17 +21,18 @@ For detailed environment and request behavior, read `references/frontend-context
 ## Workflow
 
 1. Check for skill updates once per working session with `python scripts/check_updates.py`. If it reports a newer version and this skill is inside the official git checkout, run `python scripts/check_updates.py --pull`, then read `references/release-notes.md`.
-2. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, permission gates, and page keys.
-3. Enforce the frontend permission gate with `python scripts/check_permission.py --page <page-key>`. This uses the cached login session when no token is passed. If it is denied, stop and explain that the current account cannot use the requested page or feature.
-4. Read exactly one page guide for the target page: `page-smart-search.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
-5. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
-6. Use `references/api-details.md` only when request/response examples or field shapes are needed.
-7. Use `references/api-map.md` as a compact endpoint index after the page guide, not as the primary workflow source.
-8. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
-9. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
-10. Verify the API response and summarize the result in user-facing terms.
-11. End every successful user-facing operation with 2-4 contextual next actions so the user knows what they can do next.
-12. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
+2. When maintaining or updating this skill, compare the local frontend/backend source repos with `python scripts/check_source_bindings.py`, then read `references/source-bindings.md` before trusting old page/API documentation.
+3. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, permission gates, and page keys.
+4. Enforce the frontend permission gate with `python scripts/check_permission.py --page <page-key>`. This uses the cached login session when no token is passed. If it is denied, stop and explain that the current account cannot use the requested page or feature.
+5. Read exactly one page guide for the target page: `page-smart-search.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
+6. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
+7. Use `references/api-details.md` only when request/response examples or field shapes are needed.
+8. Use `references/api-map.md` as a compact endpoint index after the page guide, not as the primary workflow source.
+9. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
+10. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
+11. Verify the API response and summarize the result in user-facing terms.
+12. End every successful user-facing operation with 2-4 contextual next actions so the user knows what they can do next.
+13. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
 
 ## Version Updates
 
@@ -95,6 +96,7 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - `references/page-operation-index.md`: page-first map from UI labels/routes to operation guides
 - `references/permission-policy.md`: frontend account-type and page permission enforcement rules
 - `references/session-and-next-actions.md`: local login session reuse and user-facing next-action prompts
+- `references/source-bindings.md`: bound frontend/backend branches and commit IDs for this skill version
 - `references/page-shell-auth-files.md`: shell login, bootstrap, meeting minutes, user/system utilities
 - `references/page-smart-search.md`: Smart Search and Company Cloud operations
 - `references/page-talent-matrix.md`: Talent Matrix operations
@@ -111,6 +113,7 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - `references/release-notes.md`: version changes to read after `check_updates.py` reports an update
 - `VERSION.json`: machine-readable installed skill version metadata
 - `scripts/check_updates.py`: compare/pull the latest GitHub skill version
+- `scripts/check_source_bindings.py`: compare local frontend/backend repos with `VERSION.json` source bindings
 - `scripts/check_permission.py`: enforce frontend page permission gates before API calls
 - `scripts/digclaw_session.py`: shared local session cache support for helper scripts
 - `scripts/digclaw_login.py`: frontend-equivalent login and user context helper
