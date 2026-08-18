@@ -8,9 +8,12 @@ Use this index first. The current frontend is route `/` -> `src/views/home.vue`;
 |---|---:|---|---|---|---|
 | App shell, login, user, files | shell | `src/views/home.vue` | login-dependent | `shell` | `page-shell-auth-files.md` |
 | 智能搜索 / 公司云库 | 9 | `Home/SmartSearch.vue` | `Smart Search` | `smart-search` | `page-smart-search.md` |
+| AI 对话搜索 | 14 | `Home/AgentSearchWorkspace.vue` | `AI Conversation Search` | `agent-conversation-search` | `page-agent-conversation-search.md` |
+| Rhizome Agent | 15 | `Home/RhizomeAgent.vue` | `Rhizome Agent` | `rhizome-agent` | `page-rhizome-agent.md` |
 | 人才矩阵 | 7 | `Home/Talents.vue` + talent panels | `Talent Matrix` | `talent-matrix` | `page-talent-matrix.md` |
 | 项目通联 | 4 | `Home/NewMemoV3.vue` + memo dialogs | `Project Connectivity` | `project-connectivity` | `page-project-connectivity.md` |
 | 创投名录 | 12 | `Home/Investors1.vue` + investor dialogs | `Venture Investment Directory` | `venture-directory` | `page-venture-directory.md` |
+| 资料汇总 | separate route `/publicAssets` | `src/views/PublicAssets.vue` | `Public Asset Summary` | `public-assets` | `page-public-assets.md` |
 | 行业探析 | 11 | `Home/IndustryAnalyze.vue` + tabs/dialogs | `Industry Analysis` | `industry-analysis` | `page-industry-analysis.md` |
 | 账号管理 | 13 | `Home/AdminAccounts.vue` | `MASTER` or `Account Administration` | `admin-accounts` | `page-admin-accounts.md` |
 | Special/hidden pages | 2, 3, 8 | file management, `Home/share.vue`, `Home/AiAnalyze.vue` | permission/commented menu | `file-management`, `ai-sourcing`, `standalone-ai-analysis` | `page-ai-sourcing-analysis.md` |
@@ -20,6 +23,7 @@ Use this index first. The current frontend is route `/` -> `src/views/home.vue`;
 - `/preview`: meeting/project preview page.
 - `/memoPreview`: memo preview page.
 - `/memoAttachmentPreview`: memo attachment preview route used by attachment/report dialogs.
+- `/publicAssets`: Public Asset Summary page opened from the shell when `Public Asset Summary` is present in `accessibleFunctions`.
 - `/home1`: legacy shell (`src/views/index.vue`); do not document new operations from it unless the user explicitly asks about legacy behavior.
 - `activeMenu === 6` opens `FindCompany.vue` directly; in the current visible flow it is usually reached from Smart Search or AI Sourcing CSV task entry.
 

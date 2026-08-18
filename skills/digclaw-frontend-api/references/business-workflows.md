@@ -24,7 +24,7 @@ Bootstrap after token exists:
 1. `GET /chat/user/info`
 2. `GET /chat/user/permission`
 3. `GET /chat/user/settings`
-4. Select the first accessible current menu in this order: Smart Search, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis. `MASTER` or `Account Administration` can open Admin Accounts.
+4. Select the first accessible current menu in this order: Smart Search, AI Conversation Search, Rhizome Agent, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis, Public Asset Summary. `MASTER` or `Account Administration` can open Admin Accounts.
 5. Load shell side data when needed:
    - `GET /chat/userConversation/list`
    - `GET /chat/label/list`
@@ -185,7 +185,56 @@ Export visible company results:
 
 1. Collect visible `companyIds`.
 2. `POST /chat/company-vector/export` with `{ companyIds }`.
-3. The frontend treats `msg` as CSV text and downloads it locally.
+3. The frontend treats `msg` as a downloadable CSV URL and downloads it locally.
+
+Export Company Cloud curated-list data:
+
+1. This button is visible only to `MASTER` in `ElitedCompany.vue`.
+2. Build `{ query }` from the current company cloud filters/search params and reset `pageNum` to `1`.
+3. `POST /chat/company/export` with `{ query }`.
+4. Treat `msg` as a downloadable CSV URL.
+
+## AI Conversation Search
+
+Initial load:
+
+1. Check `agent-conversation-search` permission.
+2. `GET /chat/agent-search/conversations`.
+
+Run a turn:
+
+1. Build the turn payload with user message, optional `conversationId`, optional `targetType`/search path, and any interaction response.
+2. Prefer `POST /chat/agent-search/turn/stream` and process SSE JSON events.
+3. If streaming is unavailable, fall back to `POST /chat/agent-search/turn`.
+4. If the response asks for ambiguity or keyword-selection choices, get the user's selection and submit the next turn with that interaction payload.
+5. On result, update the candidate list and conversation state.
+
+Conversation history:
+
+1. List with `GET /chat/agent-search/conversations`.
+2. Load detail with `GET /chat/agent-search/conversations/{id}`.
+3. Delete with `DELETE /chat/agent-search/conversations/{id}`.
+
+Candidate enrichment/export:
+
+1. Use `POST /chat/agent-search/candidate-web-enrichment` for a selected candidate when the UI requests profile enrichment.
+2. Export is local CSV generation from the visible candidate list, not a backend export endpoint.
+
+## Rhizome Agent
+
+Initial load:
+
+1. Check `rhizome-agent` permission.
+2. `GET {rhizomeBase}/api/health`; default base is `https://rhizome.diggen.cn/`.
+3. Select `default_config` when it matches the frontend workflow options.
+
+Run a research task:
+
+1. Optionally upload an attachment with `POST {rhizomeBase}/api/files` multipart field `file`.
+2. Build a task body with `task`, `config_file_name`, optional `task_file_name`, generated `task_id`, and `timeout_seconds`.
+3. `POST {rhizomeBase}/api/research/stream`.
+4. Append `log` events into the scrollable execution stream.
+5. On `result`, use `boxed_answer` as the final answer when present.
 
 Company CSV generation mode:
 
@@ -435,6 +484,29 @@ Open event/person/opinion detail:
    - `GET /insight/opinions/trend`
    - `GET /insight/opinions/{id}`
 
+## Public Asset Summary
+
+Initial load:
+
+1. Check `public-assets` permission.
+2. `GET /insight/public-assets/summary` with `page`, `limit`, and optional filters.
+3. Select a visible asset to inspect details.
+
+Reparse:
+
+1. `POST /insight/public-assets/{assetId}/reparse`.
+2. Refresh `GET /insight/public-assets/summary`.
+
+Investor extraction from an asset:
+
+1. Require the selected asset to have a URL.
+2. `POST /chat/investor/parse-task` with one `sources` entry for the selected URL.
+3. `GET /insight/public-assets/investor-tasks?url={selectedUrl}`.
+4. Poll every ~3 seconds while the task is `PENDING` or `RUNNING`.
+5. Save generated investor drafts with `PUT /chat/investor`.
+6. Save/delete generated opinions with `PUT /chat/investor/opinion` or `DELETE /chat/investor/opinion/{id}`.
+7. Publish selected data with `POST /chat/investor/parse-task/{taskId}/publish`.
+
 ## Admin Accounts
 
 Initial load:
@@ -446,12 +518,13 @@ Initial load:
 Create/update user:
 
 1. Load account type options first.
-2. Create with `POST /chat/admin/users` or update with `PUT /chat/admin/users/{id}`. Current page sends `accountNum`, optional `password`, `nickName`, `accountType`, `status`, and `accountValidUntil`.
+2. Create with `POST /chat/admin/users` or update with `PUT /chat/admin/users/{id}`. Current page sends `accountNum`, optional `password`, `nickName`, `accountType`, `status`, `accountValidUntil`, `companyDataRestrictBeforeDays`, `companySearchMaxPerHour`, and `talentSearchMaxPerHour`.
 3. Reset password with `PUT /chat/admin/users/{id}/password` and `{ password: "123456" }`.
 4. Toggle status with `PUT /chat/admin/users/{id}/status` and `{ status: 1|0 }`; the page updates the row locally.
 5. Delete with `DELETE /chat/admin/users/{id}`.
-6. Refresh `GET /chat/admin/users` after create/update/delete.
-7. The API helper has `/expiry`, but the current Admin Accounts page edits expiry through `accountValidUntil` in create/update, so do not call `/expiry` for page-equivalent behavior.
+6. Clear search counters with `POST /chat/admin/users/{id}/search-rate-limit/clear` and `{ "type": "all" | "company" | "talent" }`.
+7. Refresh `GET /chat/admin/users` after create/update/delete.
+8. The API helper has `/expiry`, but the current Admin Accounts page edits expiry through `accountValidUntil` in create/update, so do not call `/expiry` for page-equivalent behavior.
 
 Manage account types:
 

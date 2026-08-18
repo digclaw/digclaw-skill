@@ -66,7 +66,8 @@ Permission gate: `smart-search`. For company search operations also check `smart
 
 ### Export And CSV Task
 
-- Export visible companies: `POST /chat/company-vector/export` with `{ companyIds }`; frontend treats response `msg` as CSV content.
+- Export visible search-result companies: `POST /chat/company-vector/export` with `{ companyIds }`; frontend treats response `msg` as a downloadable CSV URL and downloads it in the browser.
+- Company Cloud curated-list export is available only to `MASTER` in the current `ElitedCompany.vue` UI. It uses `POST /chat/company/export` with `{ query }`, where `query` is the current company cloud filter/search params reset to `pageNum: 1`. The backend exports all rows matching that query and returns a CSV URL in `msg`.
 - CSV generation mode: `GET /chat/custom-company/tasks`, `POST /chat/custom-company/task/submit`, delete with `/chat/custom-company/task/delete`.
 
 ### Talent Search Inside Smart Search

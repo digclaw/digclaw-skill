@@ -1,22 +1,22 @@
 {
   "name": "digclaw-skill",
-  "version": "0.6.1",
-  "updated_at": "2026-06-30",
+  "version": "0.7.0",
+  "updated_at": "2026-08-18",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Clarifies that frontend/backend source bindings are developer maintenance metadata and normal skill updates use the skill version only.",
+  "summary": "Updates the skill to match current frontend-visible DigClaw modules, including AI Conversation Search, Rhizome Agent, Public Asset Summary, company export, and admin controls.",
   "source_bindings": {
     "purpose": "developer-maintenance-only",
     "user_update_policy": "Users and agents should update this skill by comparing VERSION.json.version only. Source bindings must not block installation or updates.",
-    "bound_at": "2026-06-30",
+    "bound_at": "2026-08-18",
     "frontend": {
       "name": "digclaw-web",
       "remote": "https://github.com/digclaw/digclaw-web.git",
       "branch": "v3_dev",
-      "commit": "5b656899fd197fd503349cf0d7108cd12eac5bef",
+      "commit": "89c17667925db21ad7a8c98741b7eaa9b71f634b",
       "local_audit_path": "G:\\digclaw_server\\diggenai_web",
       "worktree": "clean"
     },
@@ -24,9 +24,9 @@
       "name": "digclaw-server",
       "remote": "https://github.com/digclaw/digclaw-server.git",
       "branch": "v3_dev",
-      "commit": "a07c2a3152fb2855ce539c47eaca61aabfab31a6",
+      "commit": "3f25dad8dddc58f3d30c58ceacd2dc4c4304fcb4",
       "local_audit_path": "G:\\digclaw_server\\diggenai",
-      "worktree": "commit bound; untracked ruoyi-modules/vc-chat/tweitter/__pycache__/ was present locally and is not part of the binding"
+      "worktree": "clean"
     }
   }
 }

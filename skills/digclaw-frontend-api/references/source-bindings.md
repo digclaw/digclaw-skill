@@ -8,10 +8,10 @@ This skill records the frontend and backend source baselines below. Use this fil
 
 | System | Repository | Branch | Commit | Local path used for audit | Notes |
 |---|---|---|---|---|---|
-| Frontend | `https://github.com/digclaw/digclaw-web.git` | `v3_dev` | `5b656899fd197fd503349cf0d7108cd12eac5bef` | `G:\digclaw_server\diggenai_web` | clean at binding time |
-| Backend | `https://github.com/digclaw/digclaw-server.git` | `v3_dev` | `a07c2a3152fb2855ce539c47eaca61aabfab31a6` | `G:\digclaw_server\diggenai` | commit bound; local worktree had untracked `ruoyi-modules/vc-chat/tweitter/__pycache__/` |
+| Frontend | `https://github.com/digclaw/digclaw-web.git` | `v3_dev` | `89c17667925db21ad7a8c98741b7eaa9b71f634b` | `G:\digclaw_server\diggenai_web` | clean at binding time |
+| Backend | `https://github.com/digclaw/digclaw-server.git` | `v3_dev` | `3f25dad8dddc58f3d30c58ceacd2dc4c4304fcb4` | `G:\digclaw_server\diggenai` | clean at binding time |
 
-Binding date: `2026-06-30`
+Binding date: `2026-08-18`
 
 ## Developer Maintenance Rule
 

@@ -10,6 +10,7 @@ This audit is based on the current Vue frontend code. Use it to decide which pag
   - `/preview`: `src/views/Main/Preview.vue`
   - `/memoPreview`: `src/views/Main/MemoPreview.vue`
   - `/memoAttachmentPreview`: `src/views/Home/components/MemoAttachmentPreview.vue`
+  - `/publicAssets`: `src/views/PublicAssets.vue`
 - `src/views/home.vue` is the current page shell. It controls login, permissions, theme/sidebar state, current menu, user info, file management, conversation history, meeting-minute upload/generation, and opens child pages.
 
 ## Current Shell Menu
@@ -19,10 +20,13 @@ The visible current shell uses `accessibleFunctions` from `GET /chat/user/permis
 | Menu | Component | Permission name | Notes |
 |---|---|---|---|
 | Smart Search | `Home/SmartSearch.vue` | `Smart Search` | Contains company search, curated list access, CSV-generated company search entry, and talent natural search. |
+| AI Conversation Search | `Home/AgentSearchWorkspace.vue` | `AI Conversation Search` | Conversational company/talent agent search with streamed turns, history, AI check, enrichment, and local CSV export. |
+| Rhizome Agent | `Home/RhizomeAgent.vue` | `Rhizome Agent` | DigClaw-native page that calls the external Rhizome API for health, file upload, and streamed research tasks. |
 | Talent Matrix | `Home/Talents.vue` | `Talent Matrix` | Current talent V2 page. |
 | Project Connectivity | `Home/NewMemoV3.vue` | `Project Connectivity` | Current Project Memo page plus FA collaboration and AI analysis dialogs. |
 | Venture Investment Directory | `Home/Investors1.vue` | `Venture Investment Directory` | Investor directory, parsing tasks, opinions. |
 | Industry Analysis | `Home/IndustryAnalyze.vue` | `Industry Analysis` | Insight event/person/opinion dashboard. |
+| Public Asset Summary | `/publicAssets` route, `PublicAssets.vue` | `Public Asset Summary` | Asset summary, parse result review, reparse, investor extraction and publishing. |
 | Account Administration | `Home/AdminAccounts.vue` | `Account Administration` or `MASTER` | Opened through account/admin action, not normal left menu. |
 
 Hidden or mostly legacy entries in the current shell include AI Sourcing (`Home/share.vue`), file management (`activeMenu === 2`), standalone AI analysis (`Home/AiAnalyze.vue`), and FindCompany CSV upload. They still exist in the current component tree and can be used when a visible workflow opens them, but do not prioritize them over the current menu flows.
@@ -77,11 +81,38 @@ Company result actions:
 - Toggle interest: `POST /chat/company-vector/toggle-interest` with `companyId`.
 - Assign agents from result rows: `POST /chat/company-vector/member/register` with `companyId` and `userIds`.
 - Export visible results: `POST /chat/company-vector/export` with `companyIds`; response `msg` is a CSV URL.
+- Company Cloud curated-list export in `ElitedCompany.vue` is visible only to `MASTER`, uses `POST /chat/company/export` with `{ query }`, and exports all rows matching the current filters.
 
 Other Smart Search subflows:
 - Talent natural search uses `POST /chat/search/talent-search` with `inputText` and `mode: "result"`.
 - CSV company generation entry checks `GET /chat/custom-company/tasks`, then opens the generated result list or upload dialog. Submit/delete use `POST /chat/custom-company/task/submit` and `POST /chat/custom-company/task/delete`.
 - Curated list support is gated by `Company Search` and `View Curated List` permission names.
+
+## AI Conversation Search Page
+
+`src/views/Home/AgentSearchWorkspace.vue` owns the current conversational agent search workspace.
+
+Initial/history:
+- `GET /chat/agent-search/conversations`
+- `GET /chat/agent-search/conversations/{id}`
+- `DELETE /chat/agent-search/conversations/{id}`
+- `POST /chat/agent-search/conversations`
+
+Turns:
+- Preferred streamed turn: `POST /chat/agent-search/turn/stream`.
+- Fallback non-streamed turn: `POST /chat/agent-search/turn`.
+- Candidate web enrichment: `POST /chat/agent-search/candidate-web-enrichment`.
+- Export from this page is local CSV generation from the visible candidate list.
+
+## Rhizome Agent Page
+
+`src/views/Home/RhizomeAgent.vue` owns the Rhizome Agent page. It is gated by `Rhizome Agent` in `accessibleFunctions`.
+
+- Health: `GET {rhizomeBase}/api/health`.
+- Upload: `POST {rhizomeBase}/api/files`.
+- Run streamed task: `POST {rhizomeBase}/api/research/stream`.
+- Default Rhizome base: `https://rhizome.diggen.cn/`, overridable by `VUE_APP_RHIZOME_AGENT_URL`.
+- The page is a native DigClaw UI, not an iframe. Logs live inside a scrollable event container and do not stretch the page.
 
 ## Talent Matrix Page
 
@@ -219,6 +250,18 @@ Viewpoints tab:
 
 Collect/share/copy actions in the dialogs are local UI actions, not backend calls in the current code.
 
+## Public Asset Summary
+
+`src/views/PublicAssets.vue` owns `/publicAssets`, opened from the shell when `Public Asset Summary` is present in `accessibleFunctions`.
+
+- Summary/filter: `GET /insight/public-assets/summary`.
+- Reparse: `POST /insight/public-assets/{assetId}/reparse`.
+- Investor tasks by asset URL: `GET /insight/public-assets/investor-tasks`.
+- Investor extraction starts with `POST /chat/investor/parse-task`.
+- Generated investor drafts are saved/deleted through existing investor APIs.
+- Generated opinions are saved/deleted through investor opinion APIs.
+- Publishing uses `POST /chat/investor/parse-task/{id}/publish`.
+
 ## Admin Accounts
 
 `src/views/Home/AdminAccounts.vue` owns account and permission-template management.
@@ -229,7 +272,9 @@ Collect/share/copy actions in the dialogs are local UI actions, not backend call
   - Update: `PUT /chat/admin/users/{id}`.
   - Reset password: `PUT /chat/admin/users/{id}/password` with `{ "password": "123456" }`.
   - Toggle status: `PUT /chat/admin/users/{id}/status` with `{ "status": 1 | 0 }`.
+  - Clear search rate limits: `POST /chat/admin/users/{id}/search-rate-limit/clear` with `{ "type": "all" | "company" | "talent" }`.
   - Delete: `DELETE /chat/admin/users/{id}`.
+  - Create/update forms include `companyDataRestrictBeforeDays`, `companySearchMaxPerHour`, and `talentSearchMaxPerHour`.
 - Account types:
   - Create: `POST /chat/admin/account-types`.
   - Update: `PUT /chat/admin/account-types/{id}`.

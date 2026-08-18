@@ -717,6 +717,72 @@ Toggle company status uses `targetStatus`:
 python scripts\digclaw_request.py --method POST --path /chat/company-vector/toggle-connection-status --params '{"companyId":100,"targetStatus":2}'
 ```
 
+Company vector export returns a downloadable CSV URL in `msg`:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/company-vector/export --data '{"companyIds":[100,101]}'
+```
+
+Company Cloud curated-list export is a separate current frontend action from `ElitedCompany.vue`. It is visible only to `MASTER` and exports all rows matching the current query:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/company/export --data '{"query":{"pageNum":1,"pageSize":20,"keyword":"AI","filterType":"all"}}'
+```
+
+The backend returns a CSV URL in `msg`.
+
+## AI Conversation Search
+
+Preferred streamed turn endpoint:
+
+`POST /chat/agent-search/turn/stream`
+
+Because this is an SSE endpoint, use an SSE-capable HTTP client rather than `digclaw_request.py` for interactive streaming. Fallback non-streaming endpoint:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/agent-search/turn --data '{"message":"帮我找世界模型相关创业公司","targetType":"company","conversationId":null}'
+```
+
+Conversation APIs:
+
+```powershell
+python scripts\digclaw_request.py --method GET --path /chat/agent-search/conversations
+python scripts\digclaw_request.py --method GET --path /chat/agent-search/conversations/123
+python scripts\digclaw_request.py --method DELETE --path /chat/agent-search/conversations/123
+```
+
+Candidate web enrichment:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/agent-search/candidate-web-enrichment --data '{"type":"talent","id":10001,"name":"Jane Doe"}'
+```
+
+## Rhizome Agent
+
+Rhizome Agent uses the external Rhizome API base, default `https://rhizome.diggen.cn/`, not the DigClaw API root.
+
+Health:
+
+```powershell
+Invoke-WebRequest -Uri https://rhizome.diggen.cn/api/health -UseBasicParsing
+```
+
+Upload file:
+
+```powershell
+curl.exe -X POST https://rhizome.diggen.cn/api/files -F "file=@G:\path\to\file.pdf"
+```
+
+Stream research:
+
+```powershell
+curl.exe -N -X POST https://rhizome.diggen.cn/api/research/stream ^
+  -H "Content-Type: application/json" ^
+  -d "{\"task\":\"请研究未来一个月显卡价格走势\",\"config_file_name\":\"agent_qwen_web_search\",\"timeout_seconds\":900}"
+```
+
+Expected stream messages are `type=start`, `type=log`, `type=error`, `type=result`, then `data: [DONE]`.
+
 ### Talent detail and manual connection
 
 Toggle status uses `statusCode`:
@@ -858,19 +924,46 @@ Paged rank response can be one of several shapes; normalize like the frontend:
 }
 ```
 
+### Public Asset Summary
+
+List and filter uploaded assets and parsed results:
+
+```powershell
+python scripts\digclaw_request.py --base insight --method GET --path /public-assets/summary --params '{"page":1,"limit":40,"assetType":"file","parseStatus":"parsed","resultType":"investor","keyword":"AI"}'
+```
+
+Reparse an asset:
+
+```powershell
+python scripts\digclaw_request.py --base insight --method POST --path /public-assets/123/reparse
+```
+
+Load investor parse tasks for an asset URL:
+
+```powershell
+python scripts\digclaw_request.py --base insight --method GET --path /public-assets/investor-tasks --params '{"url":"https://example.com/profile"}'
+```
+
+Publish generated investor information or selected opinions:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/investor/parse-task/123/publish --data '{"publishInvestor":true,"publishAllOpinions":false,"opinionIds":[1001,1002]}'
+```
+
 ### Admin Accounts current forms
 
 Current user form:
 
 ```powershell
-python scripts\digclaw_request.py --method POST --path /chat/admin/users --data '{"accountNum":"agent001","password":"123456","nickName":"Agent 001","accountType":"COMPANY_AGENT","status":1,"accountValidUntil":"2026-12-31"}'
+python scripts\digclaw_request.py --method POST --path /chat/admin/users --data '{"accountNum":"agent001","password":"123456","nickName":"Agent 001","accountType":"COMPANY_AGENT","status":1,"accountValidUntil":"2026-12-31","companyDataRestrictBeforeDays":14,"companySearchMaxPerHour":50,"talentSearchMaxPerHour":50}'
 python scripts\digclaw_request.py --method PUT --path /chat/admin/users/101/status --data '{"status":0}'
 python scripts\digclaw_request.py --method PUT --path /chat/admin/users/101/password --data '{"password":"123456"}'
+python scripts\digclaw_request.py --method POST --path /chat/admin/users/101/search-rate-limit/clear --data '{"type":"all"}'
 ```
 
 Current account-type form:
 
 ```powershell
-python scripts\digclaw_request.py --method POST --path /chat/admin/account-types --data '{"typeCode":"COMPANY_AGENT","typeName":"企业代理人","permissionLevel":1,"accessibleFunctions":["Smart Search"],"status":1,"remark":"Smart Search only"}'
+python scripts\digclaw_request.py --method POST --path /chat/admin/account-types --data '{"typeCode":"COMPANY_AGENT","typeName":"企业代理人","permissionLevel":1,"accessibleFunctions":["Smart Search","Rhizome Agent"],"status":1,"remark":"Smart Search and Rhizome"}'
 python scripts\digclaw_request.py --method PUT --path /chat/admin/account-types/1/status --data '{"status":0}'
 ```

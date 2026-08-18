@@ -35,10 +35,13 @@ The helper prints JSON. Continue only when `allowed` is `true`. It uses `--token
 | Smart Search page | `smart-search` | `Smart Search` |
 | Smart Search company search | `smart-search.company-search` | `Smart Search` and `Company Search` |
 | Smart Search curated list | `smart-search.curated-list` | `Smart Search` and `View Curated List` |
+| AI Conversation Search | `agent-conversation-search` | `AI Conversation Search` |
+| Rhizome Agent | `rhizome-agent` | `Rhizome Agent` |
 | Talent Matrix | `talent-matrix` | `Talent Matrix` |
 | Project Connectivity | `project-connectivity` | `Project Connectivity` |
 | Venture Investment Directory | `venture-directory` | `Venture Investment Directory` |
 | Industry Analysis | `industry-analysis` | `Industry Analysis` |
+| Public Asset Summary | `public-assets` | `Public Asset Summary` |
 | Account Administration | `admin-accounts` | `accountType === "MASTER"` or `Account Administration` |
 | Hidden file management | `file-management` | `permissionLevel === 3` or `permissionLevel === 5` |
 | Hidden standalone AI Analysis | `standalone-ai-analysis` | `permissionLevel === 3` |

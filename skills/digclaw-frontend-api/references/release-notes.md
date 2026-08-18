@@ -2,6 +2,15 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.7.0 - 2026-08-18
+
+- Rebound source metadata to frontend `89c17667925db21ad7a8c98741b7eaa9b71f634b` and backend `3f25dad8dddc58f3d30c58ceacd2dc4c4304fcb4`.
+- Added page guides and permission checks for AI Conversation Search, Rhizome Agent, and Public Asset Summary.
+- Documented Rhizome Agent's external API integration, file upload, streamed research task flow, and DigClaw-native UI behavior.
+- Updated Smart Search/Company Cloud export guidance for CSV URL downloads and MASTER-only curated-list export.
+- Updated Account Administration docs for per-user company data restriction, search limits, and search-rate-limit clearing.
+- Added Public Asset Summary asset filtering, reparse, investor extraction, and publish workflows.
+
 ## 0.6.1 - 2026-06-30
 
 - Clarified that user and agent update checks rely only on `VERSION.json.version`.

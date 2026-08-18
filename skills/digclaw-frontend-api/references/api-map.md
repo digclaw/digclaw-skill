@@ -111,6 +111,7 @@ Use the production host `https://v3-api.diggen.cn` for `/chat/...` paths and `ht
 | Delete history record | `deleteRecordAPI` | DELETE | `/chat/user-record/delete/{id}` |
 | Talent natural search | `talentSearchNatureAPI` | POST | `/chat/search/talent-search` |
 | Status options | `stateOptionsAPI` | GET | `/chat/company/contactStatus/types` |
+| Company vector export headers | backend endpoint | GET | `/chat/company-vector/export/headers` |
 
 ## Talent V2
 
@@ -200,6 +201,7 @@ Use the production host `https://v3-api.diggen.cn` for `/chat/...` paths and `ht
 | Submit parse task | `submitParseTaskAPI` | POST | `/chat/investor/parse-task` |
 | Parse task status | `taskStatusAPI` | GET | `/chat/investor/parse-task/{id}` |
 | Confirm parse task | `taskStatusConfirmAPI` | POST | `/chat/investor/parse-task/{id}/confirm` |
+| Publish parse task draft | `parseTaskPublishAPI` | POST | `/chat/investor/parse-task/{id}/publish` |
 | Parse task list | `parseTaskListAPI` | GET | `/chat/investor/parse-task/list` |
 | Delete parse task | `parseTaskDeleteAPI` | DELETE | `/chat/investor/parse-task/{id}` |
 | Upload investor attachment | `attachmentUploadAPI` | POST | `/chat/investor/attachment/upload` |
@@ -229,6 +231,28 @@ Use the production host `https://v3-api.diggen.cn` for `/chat/...` paths and `ht
 | Unbind agent | `deleteAgentUserAPI` | DELETE | `/chat/companyMember/{id}` |
 | Update agent identity | `updateAgentUserToCompanyAPI` | POST | `/chat/companyMember/updateIdentity` |
 
+## AI Conversation Search
+
+| Feature | Function | Method | Path |
+|---|---|---:|---|
+| Agent turn | `agentSearchTurnAPI` | POST | `/chat/agent-search/turn` |
+| Agent streamed turn | `agentSearchTurnStreamAPI` | POST | `/chat/agent-search/turn/stream` |
+| Candidate web enrichment | `agentSearchCandidateWebEnrichmentAPI` | POST | `/chat/agent-search/candidate-web-enrichment` |
+| Create conversation | `createAgentSearchConversationAPI` | POST | `/chat/agent-search/conversations` |
+| List conversations | `listAgentSearchConversationsAPI` | GET | `/chat/agent-search/conversations` |
+| Conversation detail | `getAgentSearchConversationAPI` | GET | `/chat/agent-search/conversations/{id}` |
+| Delete conversation | `deleteAgentSearchConversationAPI` | DELETE | `/chat/agent-search/conversations/{id}` |
+
+## Rhizome Agent
+
+Rhizome endpoints use the external Rhizome base URL, default `https://rhizome.diggen.cn/`, not the DigClaw `/chat` API root.
+
+| Feature | Frontend use | Method | Path |
+|---|---|---:|---|
+| Health check | `RhizomeAgent.vue` | GET | `{rhizomeBase}/api/health` |
+| Upload task file | `RhizomeAgent.vue` | POST multipart | `{rhizomeBase}/api/files` |
+| Run streamed research | `RhizomeAgent.vue` | POST SSE | `{rhizomeBase}/api/research/stream` |
+
 ## Industry Insight
 
 Insight paths use `https://v3-api.diggen.cn/insight`.
@@ -250,6 +274,16 @@ Insight paths use `https://v3-api.diggen.cn/insight`.
 | Opinion trend | `queryOpinionsTrend` | GET | `/opinions/trend` |
 | Opinion detail | `queryOpinionsDetail` | GET | `/opinions/{id}` |
 
+## Public Asset Summary
+
+Insight public asset paths use `https://v3-api.diggen.cn/insight`.
+
+| Feature | Function | Method | Path |
+|---|---|---:|---|
+| Public asset summary | `publicAssetSummaryAPI` | GET | `/public-assets/summary` |
+| Reparse public asset | `publicAssetReparseAPI` | POST | `/public-assets/{assetId}/reparse` |
+| Investor parse tasks by asset URL | `publicAssetInvestorTasksAPI` | GET | `/public-assets/investor-tasks` |
+
 ## Admin Accounts
 
 | Feature | Function | Method | Path |
@@ -261,6 +295,7 @@ Insight paths use `https://v3-api.diggen.cn/insight`.
 | Reset admin password | `resetAdminUserPassword` | PUT | `/chat/admin/users/{id}/password` |
 | Update admin status | `updateAdminUserStatus` | PUT | `/chat/admin/users/{id}/status` |
 | Update admin expiry helper (not used by current Admin Accounts page; current page sends `accountValidUntil` in create/update) | `updateAdminUserExpiry` | PUT | `/chat/admin/users/{id}/expiry` |
+| Clear admin user search rate limits | `clearAdminUserSearchRateLimit` | POST | `/chat/admin/users/{id}/search-rate-limit/clear` |
 | Delete admin user | `deleteAdminUser` | DELETE | `/chat/admin/users/{id}` |
 | Account types | `listAccountTypes` | GET | `/chat/admin/account-types` |
 | Account type options | `accountTypeOptions` | GET | `/chat/admin/account-types/options` |
