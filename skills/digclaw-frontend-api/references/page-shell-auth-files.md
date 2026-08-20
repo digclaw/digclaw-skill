@@ -24,18 +24,23 @@ clientid: b7bf1120a216184a9e0f4ca0e9c508bb
 
 ### Login And Bootstrap
 
-1. `POST /appAuth/login` with `accountNum`, `password`, `clientId`, `grantType: "appPwd"`.
-2. Read `data.access_token` and `data.userId`.
-3. `GET /chat/user/info`.
-4. `GET /chat/user/permission`.
-5. `GET /chat/user/settings`.
-6. Choose the first accessible page in this order: Smart Search, AI Conversation Search, Rhizome Agent, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis, Public Asset Summary. Admin Accounts is only for `MASTER` or `Account Administration`.
+1. Resolve credentials from `--token`, `DIGCLAW_ACCESS_TOKEN`, `DIGCLAW_ACCOUNT_NUM`/`DIGCLAW_USERNAME` plus `DIGCLAW_PASSWORD`, then the cached session.
+2. If no credential source exists, ask the user for the DigClaw account and password.
+3. `POST /appAuth/login` with `accountNum`, `password`, `clientId`, `grantType: "appPwd"` when a fresh login is needed.
+4. Read `data.access_token` and `data.userId`.
+5. `GET /chat/user/info`.
+6. `GET /chat/user/permission`.
+7. `GET /chat/user/settings`.
+8. Choose the first accessible page in this order: Smart Search, AI Conversation Search, Rhizome Agent, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis, Public Asset Summary. Admin Accounts is only for `MASTER` or `Account Administration`.
 
 Helper:
 
 ```powershell
 python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>"
+python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>" --persist-credentials
 ```
+
+Use `--persist-credentials` only after the user explicitly agrees to store `DIGCLAW_ACCOUNT_NUM` and `DIGCLAW_PASSWORD` in the operating-system user environment.
 
 ### Meeting-Minute Upload And List
 

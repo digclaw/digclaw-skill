@@ -157,7 +157,7 @@ def decide(page, context):
 def main():
     parser = argparse.ArgumentParser(description="Enforce DigClaw frontend page permission gates before API use.")
     parser.add_argument("--page", required=True, choices=sorted(PAGE_RULES.keys()), help="Frontend page or subfeature key")
-    parser.add_argument("--token", help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN or the cached DigClaw session")
+    parser.add_argument("--token", help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN, env credential auto-login, or cached session")
     parser.add_argument("--no-session", action="store_true", help="Do not read the local DigClaw session cache")
     parser.add_argument("--session-file", help="Override the local session cache path")
     parser.add_argument("--base-url", default=os.environ.get("DIGCLAW_BASE_URL", BASE_URL), help="DigClaw chat API host root")
@@ -165,13 +165,29 @@ def main():
     parser.add_argument("--timeout", type=float, default=60.0, help="Request timeout in seconds")
     parser.add_argument("--soft", action="store_true", help="Always exit 0 after printing JSON, even when denied")
     args = parser.parse_args()
-    token, token_source, session = resolve_token(args.token, args.session_file, not args.no_session)
+    try:
+        token, token_source, session = resolve_token(
+            args.token,
+            args.session_file,
+            not args.no_session,
+            allow_env_login=not args.no_session,
+            base_url=args.base_url,
+            clientid=args.clientid,
+            timeout=args.timeout,
+        )
+    except (RuntimeError, urllib.error.HTTPError, urllib.error.URLError) as exc:
+        print(json.dumps({
+            "page": args.page,
+            "allowed": False,
+            "reason": "Environment credential login failed: " + str(exc),
+        }, ensure_ascii=False, indent=2), file=sys.stderr)
+        sys.exit(1)
 
     if not token:
         print(json.dumps({
             "page": args.page,
             "allowed": False,
-            "reason": "A token is required before checking permissions. Run scripts/digclaw_login.py once to cache a session, or pass --token.",
+            "reason": "A token is required before checking permissions. Provide --token, set DIGCLAW_ACCESS_TOKEN, set DIGCLAW_ACCOUNT_NUM/DIGCLAW_PASSWORD, or run scripts/digclaw_login.py once to cache a session.",
         }, ensure_ascii=False, indent=2))
         sys.exit(0 if args.soft else 2)
 

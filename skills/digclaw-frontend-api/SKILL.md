@@ -44,15 +44,16 @@ Do not use browser page clicks to operate DigClaw unless the user explicitly ask
 
 ## Authentication
 
-Current authenticated calls use `DIGCLAW_ACCESS_TOKEN` or `--token`. If no token is available and the user authorizes login, call the frontend-equivalent login helper:
+Current authenticated calls resolve login context in this order: `--token`, `DIGCLAW_ACCESS_TOKEN`, environment credentials (`DIGCLAW_ACCOUNT_NUM` or `DIGCLAW_USERNAME`, plus `DIGCLAW_PASSWORD`), then the cached session. If no token or environment credentials are available, ask the user for the DigClaw account and password before attempting login. If the user agrees, optionally persist the credentials to user-level environment variables for future runs.
 
 ```bash
 python scripts/digclaw_login.py --account-num <accountNum> --password <password>
+python scripts/digclaw_login.py --account-num <accountNum> --password <password> --persist-credentials
 ```
 
-The helper posts to `/appAuth/login` with `accountNum`, `password`, `clientId`, and `grantType: appPwd`, then loads `/chat/user/info`, `/chat/user/permission`, and `/chat/user/settings`. It masks the token by default. Use `--token-only` when a follow-up command needs a token in the same shell, or `--include-token` only when the operator explicitly needs the raw token displayed.
+The helper posts to `/appAuth/login` with `accountNum`, `password`, `clientId`, and `grantType: appPwd`, then loads `/chat/user/info`, `/chat/user/permission`, and `/chat/user/settings`. It masks the token by default. Use `--token-only` when a follow-up command needs a token in the same shell, or `--include-token` only when the operator explicitly needs the raw token displayed. Use `--persist-credentials` only with explicit user approval because it stores `DIGCLAW_ACCOUNT_NUM` and `DIGCLAW_PASSWORD` in the operating system's user environment.
 
-Successful login is cached locally by default at `~/.digclaw/session.json` or `DIGCLAW_SESSION_FILE`. The cache stores token and user context, not the password. `scripts/check_permission.py` and `scripts/digclaw_request.py` automatically reuse this session until the server rejects it; on `401` or `403`, clear/recreate the session by logging in again. Read `references/session-and-next-actions.md` for details.
+Successful login is cached locally by default at `~/.digclaw/session.json` or `DIGCLAW_SESSION_FILE`. The cache stores token and user context, not the password. `scripts/check_permission.py` and `scripts/digclaw_request.py` automatically use `DIGCLAW_ACCESS_TOKEN`, then environment credentials for auto-login, then this session until the server rejects it; on `401` or `403`, clear/recreate the session by logging in again. Read `references/session-and-next-actions.md` for details.
 
 Use the bundled request helper:
 
@@ -60,7 +61,7 @@ Use the bundled request helper:
 python scripts/digclaw_request.py --method GET --path /chat/talents/v2/favorite/list
 ```
 
-For authenticated requests, set `DIGCLAW_ACCESS_TOKEN` in the environment or pass `--token`. For JSON body and query examples, run:
+For authenticated requests, set `DIGCLAW_ACCESS_TOKEN`, or set `DIGCLAW_ACCOUNT_NUM`/`DIGCLAW_PASSWORD` so the helper can log in automatically, or pass `--token`. For JSON body and query examples, run:
 
 ```bash
 python scripts/digclaw_request.py --help
@@ -132,8 +133,8 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - Deny by default when permission data is unavailable, stale, or does not include the requested page feature.
 - Do not treat a single endpoint as a complete page action until checking `business-workflows.md`.
 - Do not add backend-only or legacy endpoints unless a current page/component imports the API function.
-- Do not hard-code a user's token. Read `access_token` from runtime context or ask the operator to provide one.
-- Do not store passwords in the session cache. Persist only token and user context.
+- Do not hard-code a user's token or password. Read credentials from runtime context or ask the operator to provide them.
+- Do not store passwords in the session cache. Persist account/password to operating-system user environment variables only when the user explicitly approves `--persist-credentials`; otherwise persist only token and user context.
 - Do not end a successful operation without giving the user practical next-step options.
 - Use `https://v3-api.diggen.cn` for `/chat/...` endpoints and `https://v3-api.diggen.cn/insight` for insight endpoints.
 - Keep endpoint docs concise: method, path, frontend function, and page feature are enough unless the page code proves a required payload shape.

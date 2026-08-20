@@ -25,7 +25,7 @@ Run the helper before page-level operations:
 python scripts\check_permission.py --page smart-search
 ```
 
-The helper prints JSON. Continue only when `allowed` is `true`. It uses `--token`, `DIGCLAW_ACCESS_TOKEN`, or the cached local session in that order. A denied check exits with code `2` unless `--soft` is used.
+The helper prints JSON. Continue only when `allowed` is `true`. Credential resolution order is `--token`, `DIGCLAW_ACCESS_TOKEN`, `DIGCLAW_ACCOUNT_NUM`/`DIGCLAW_USERNAME` plus `DIGCLAW_PASSWORD` auto-login, then cached local session. If no source exists, ask the user for account/password or run `scripts/digclaw_login.py`. A denied check exits with code `2` unless `--soft` is used.
 
 ## Page Rules
 

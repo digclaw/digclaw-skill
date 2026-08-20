@@ -12,6 +12,22 @@ Default cache path:
 
 The cache contains the access token, masked token, account number, client id, user info, permissions, settings, and cache time. It does not store the password.
 
+## Credential Environment Variables
+
+When a task needs authenticated DigClaw access, first check whether credentials are already available through environment variables:
+
+- `DIGCLAW_ACCESS_TOKEN`: use directly as the bearer token.
+- `DIGCLAW_ACCOUNT_NUM` or `DIGCLAW_USERNAME`: DigClaw login account.
+- `DIGCLAW_PASSWORD`: DigClaw login password.
+
+If no token, account/password environment variables, or cached session is available, ask the user for the DigClaw account and password before logging in. With explicit user approval, the agent can save the account and password to user-level environment variables:
+
+```powershell
+python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>" --persist-credentials
+```
+
+On Windows this writes `DIGCLAW_ACCOUNT_NUM` and `DIGCLAW_PASSWORD` to the current user's environment. A new terminal/Codex process may be needed before those values appear in inherited process environments. Do not use `--persist-credentials` unless the user explicitly agrees to storing the password in OS user environment variables.
+
 Helpers that automatically use the cache:
 
 - `scripts/check_permission.py`
@@ -21,14 +37,16 @@ Resolution order:
 
 1. `--token`
 2. `DIGCLAW_ACCESS_TOKEN`
-3. cached session
+3. `DIGCLAW_ACCOUNT_NUM`/`DIGCLAW_USERNAME` plus `DIGCLAW_PASSWORD` auto-login, then token cache update
+4. cached session
 
-If the server rejects a cached token with `401` or `403`, the helper clears the cache and the agent must ask the user to log in again or run `scripts/digclaw_login.py` again with credentials.
+If the server rejects a cached token with `401` or `403`, the helper clears the cache and the agent must use environment credentials to log in again or ask the user to provide credentials.
 
 Useful commands:
 
 ```powershell
 python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>"
+python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>" --persist-credentials
 python scripts\check_permission.py --page project-connectivity
 python scripts\digclaw_request.py --method GET --path "/chat/project-memo/list?pageNum=1&pageSize=20"
 ```

@@ -5,6 +5,7 @@ import argparse
 import getpass
 import json
 import os
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -68,6 +69,19 @@ def redact_token_fields(value):
     return value
 
 
+def persist_user_environment(account_num, password):
+    if os.name == "nt":
+        commands = [
+            ["setx", "DIGCLAW_ACCOUNT_NUM", account_num],
+            ["setx", "DIGCLAW_PASSWORD", password],
+        ]
+        for command in commands:
+            subprocess.run(command, check=True, stdout=subprocess.DEVNULL)
+        return "Windows user environment"
+
+    raise RuntimeError("Persistent credential environment setup is only implemented for Windows user environment variables.")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Login to DigClaw and load frontend-equivalent user context.")
     parser.add_argument("--account-num", default=os.environ.get("DIGCLAW_ACCOUNT_NUM") or os.environ.get("DIGCLAW_USERNAME"), help="DigClaw account number; defaults to DIGCLAW_ACCOUNT_NUM or DIGCLAW_USERNAME")
@@ -81,6 +95,7 @@ def main():
     parser.add_argument("--session-file", help="Override the local session cache path; defaults to DIGCLAW_SESSION_FILE or ~/.digclaw/session.json")
     parser.add_argument("--include-token", action="store_true", help="Include the raw access token in JSON output")
     parser.add_argument("--token-only", action="store_true", help="Print only the raw access token")
+    parser.add_argument("--persist-credentials", action="store_true", help="After a successful login, save account/password to user-level environment variables DIGCLAW_ACCOUNT_NUM and DIGCLAW_PASSWORD")
     args = parser.parse_args()
 
     account_num = get_secret(args.account_num, "accountNum: ")
@@ -125,6 +140,11 @@ def main():
                 "settings": output["settings"],
             }, args.session_file)
             output["session_cached"] = True
+
+        if args.persist_credentials:
+            output["credentials_persisted_to"] = persist_user_environment(account_num, password)
+        else:
+            output["credentials_persisted_to"] = None
 
         if args.token_only:
             print(token)

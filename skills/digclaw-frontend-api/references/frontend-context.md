@@ -63,6 +63,14 @@ $env:DIGCLAW_PASSWORD = "<password>"
 python scripts\digclaw_login.py
 ```
 
+The helper and permission/request scripts use this credential order: explicit `--token`, `DIGCLAW_ACCESS_TOKEN`, environment account/password auto-login, then cached session. If credentials are not already available, ask the user for the system account and password. To make future runs use system variables first, ask for explicit approval and run:
+
+```powershell
+python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>" --persist-credentials
+```
+
+This stores `DIGCLAW_ACCOUNT_NUM` and `DIGCLAW_PASSWORD` in the Windows user environment. The session cache still stores only the token and user context, not the password.
+
 Examples:
 
 ```powershell

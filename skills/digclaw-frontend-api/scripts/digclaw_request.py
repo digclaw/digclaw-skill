@@ -58,20 +58,33 @@ def main():
     parser.add_argument("--base-url", help="Override the API base URL")
     parser.add_argument("--params", help="JSON object encoded as query params")
     parser.add_argument("--data", help="JSON request body")
-    parser.add_argument("--token", help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN or the cached DigClaw session")
+    parser.add_argument("--token", help="Bearer token; defaults to DIGCLAW_ACCESS_TOKEN, env credential auto-login, or cached session")
     parser.add_argument("--no-session", action="store_true", help="Do not read the local DigClaw session cache")
     parser.add_argument("--session-file", help="Override the local session cache path")
     parser.add_argument("--clientid", default=os.environ.get("DIGCLAW_CLIENT_ID", DEFAULT_CLIENT_ID), help="DigClaw clientid header")
     parser.add_argument("--timeout", type=float, default=60.0, help="Request timeout in seconds")
     args = parser.parse_args()
-    token, token_source, session = resolve_token(args.token, args.session_file, not args.no_session)
-
     params = parse_json_arg(args.params, "--params")
     data = parse_json_arg(args.data, "--data")
     if params is not None and not isinstance(params, dict):
         raise SystemExit("--params must be a JSON object")
 
     base_url = args.base_url or (INSIGHT_BASE_URL if args.base == "insight" else CHAT_BASE_URL)
+    login_base_url = os.environ.get("DIGCLAW_BASE_URL") or (args.base_url if args.base == "chat" and args.base_url else CHAT_BASE_URL)
+    try:
+        token, token_source, session = resolve_token(
+            args.token,
+            args.session_file,
+            not args.no_session,
+            allow_env_login=not args.no_session,
+            base_url=login_base_url,
+            clientid=args.clientid,
+            timeout=args.timeout,
+        )
+    except (RuntimeError, urllib.error.HTTPError, urllib.error.URLError) as exc:
+        print(f"Environment credential login failed: {exc}", file=sys.stderr)
+        sys.exit(1)
+
     body = None
     headers = {
         "Accept": "application/json",

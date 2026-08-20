@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.7.2 - 2026-08-20
+
+- Added environment credential priority for authenticated helper scripts: `--token`, `DIGCLAW_ACCESS_TOKEN`, account/password environment auto-login, then cached session.
+- Added optional `digclaw_login.py --persist-credentials` support for saving `DIGCLAW_ACCOUNT_NUM` and `DIGCLAW_PASSWORD` to the Windows user environment after explicit user approval.
+- Updated login/session documentation to ask for DigClaw account/password when no token, credential environment variables, or cached session is available.
+
 ## 0.7.1 - 2026-08-19
 
 - Clarified that ordinary company searches should prefer keyword/advanced-filter search first, while telling users natural-language Smart Search is available but usually slower because it runs asynchronously and requires polling.

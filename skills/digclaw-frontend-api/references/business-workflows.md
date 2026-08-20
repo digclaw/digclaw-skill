@@ -5,6 +5,7 @@ Use these flows to operate DigClaw like the current frontend pages, without brow
 ## Common Rules
 
 - Authenticated calls need `Authorization: Bearer <token>` and `clientid`.
+- Authentication helpers resolve credentials in this order: explicit `--token`, `DIGCLAW_ACCESS_TOKEN`, environment account/password auto-login, then cached session. If none exists, ask the user for the DigClaw account and password. Persist account/password to OS user environment variables only when the user explicitly approves it.
 - Treat `code === 200` as success unless an endpoint is documented as returning an unwrapped body.
 - After a mutation, refresh the same list/detail endpoint the page uses.
 - For async work, submit first, then poll the task endpoint until a terminal status.
@@ -39,6 +40,7 @@ Login/register:
 3. Read `data.access_token` and `data.userId`.
 4. Store/use the token as `Authorization: Bearer <access_token>` for later requests.
 5. Run the bootstrap sequence above.
+6. Optional persistent setup, only with explicit user approval: `python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>" --persist-credentials`.
 
 Meeting-minute upload and management from the shell:
 

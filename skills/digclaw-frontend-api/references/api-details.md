@@ -8,6 +8,12 @@ All examples assume:
 $env:DIGCLAW_ACCESS_TOKEN = "<token>"
 ```
 
+If no token is available, the helper scripts next try `DIGCLAW_ACCOUNT_NUM` or `DIGCLAW_USERNAME` plus `DIGCLAW_PASSWORD` and log in automatically before falling back to the local session cache. Ask the user for the system account and password when these variables are missing. To optionally persist credentials in the Windows user environment after explicit user approval:
+
+```powershell
+python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>" --persist-credentials
+```
+
 Success responses usually use:
 
 ```json
@@ -37,6 +43,7 @@ Example:
 
 ```powershell
 python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>"
+python scripts\digclaw_login.py --account-num "<accountNum>" --password "<password>" --persist-credentials
 ```
 
 Direct request equivalent:
