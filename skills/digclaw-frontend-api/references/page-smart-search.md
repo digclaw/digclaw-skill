@@ -12,6 +12,10 @@ Permission gate: `smart-search`. For company search operations also check `smart
 - Talent natural search inside the same page.
 - CSV/custom-company generation task entry.
 
+## Search Choice Guidance
+
+When a user asks to search companies, prefer Company Keyword Search when the request can be expressed as keywords, tags, China/non-China scope, or advanced filters. Tell the user that the current Smart Search natural-language mode can take longer because it submits an async task and requires history polling, but it remains available when they want semantic query expansion or a less structured query.
+
 ## Initial Load
 
 1. `GET /chat/user/permission`.
@@ -26,12 +30,16 @@ Permission gate: `smart-search`. For company search operations also check `smart
 
 ### Company Keyword Search
 
+Use this first for normal company search requests. It returns result rows directly and matches the faster current frontend path.
+
 1. Build body with `keywords`, `page`, `size`, `chinesePeople`, `businessTags`, `establishTimeOrder`, and optional advanced filter values.
 2. `POST /chat/company-vector/search`.
 3. Display returned rows.
 4. `POST /chat/user-record/add` with `tab: "公司"`, `searchType: "关键词搜索"`, and JSON `recordData`.
 
 ### Company Natural-Language Search
+
+Before using this path, tell the user it usually takes longer than keyword search because it submits an async backend task and the page polls history about every 10 seconds. Use it when the user's query is exploratory, broad, or hard to translate into keywords/filters.
 
 1. `GET /chat/company-vector/integrated-search` with `q`, `use_cache: true`, `chinesePeople`, `businessTags`.
 2. Read `data.recordId`.

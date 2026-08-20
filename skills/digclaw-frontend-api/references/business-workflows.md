@@ -140,12 +140,16 @@ Initial load:
 
 Company keyword or advanced-filter search:
 
+Prefer this flow for company searches when the user's need can be represented by keywords, business tags, China/non-China scope, or advanced filters. Tell the user that natural-language Smart Search is available, but usually takes longer because it runs asynchronously and is checked through search-history polling.
+
 1. Build a body with `keywords`, `page`, `size`, `chinesePeople`, selected `businessTags`, `establishTimeOrder`, and any advanced filters from `/chat/company-vector/filters`.
 2. `POST /chat/company-vector/search`
 3. Show `data` as search results.
 4. Save history with `POST /chat/user-record/add`; current page stores `tab`, `searchType`, and JSON-stringified `recordData`.
 
 Company natural language search:
+
+Use this only when keyword/filter search would not capture the request well, or when the user explicitly chooses it after being told it may take longer.
 
 1. Require non-empty natural language input.
 2. `GET /chat/company-vector/integrated-search` with `q`, `use_cache: true`, `chinesePeople`, and `businessTags`.
@@ -291,11 +295,24 @@ Toggle memo interest:
 
 Mention agent in memo content:
 
-1. User creates/updates a paragraph containing an `@AI` mention.
+1. User creates/updates a paragraph containing `@智能纪要`, `@行业研究`, or both. These are the current frontend agent mentions; regular user mentions are separate UI-only context.
 2. Load current attachments with `GET /chat/project-memo/{memoId}/attachments`.
 3. Add/update the paragraph first.
-4. `POST /chat/project-memo/{memoId}/agent/mention` with `action`, `requesterName`, current paragraph title/content/text, mentioned attachments, all attachments, and other paragraphs.
-5. Refresh memo detail after the generated content or notification is expected.
+4. For `@智能纪要`, send `action: "smart_memo"`. For `@行业研究`, send `action: "industry_research"`. If both are present, the frontend sends one request per action.
+5. `POST /chat/project-memo/{memoId}/agent/mention` with `action`, `requesterName`, current paragraph title/content/text, `userInstruction`, mentioned attachments, all attachments, and other non-generated paragraphs.
+6. Refresh `GET /chat/project-memo/{memoId}` every ~2.5 seconds while generated paragraphs show progress markers such as `正在生成`, `正在调用 DeepResearch`, `## 生成进度`, or `## Agent 实时执行记录`.
+
+Smart memo example:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/agent/mention --data '{"action":"smart_memo","requesterName":"agent","currentTitle":"技术判断","currentContent":"@智能纪要 请基于当前项目和附件整理会议纪要","currentText":"@智能纪要 请基于当前项目和附件整理会议纪要","userInstruction":"请基于当前项目和附件整理会议纪要","mentionedAttachments":[],"allAttachments":[],"otherParagraphs":[]}'
+```
+
+Industry research example:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/agent/mention --data '{"action":"industry_research","requesterName":"agent","currentTitle":"行业判断","currentContent":"@行业研究 请分析该项目所在赛道、竞品、融资趋势和风险","currentText":"@行业研究 请分析该项目所在赛道、竞品、融资趋势和风险","userInstruction":"请分析该项目所在赛道、竞品、融资趋势和风险","mentionedAttachments":[],"allAttachments":[],"otherParagraphs":[]}'
+```
 
 Edit memo paragraphs:
 
@@ -452,6 +469,25 @@ Delete analysis result:
 
 1. `POST /chat/analysis/second/delete-task` with `taskId`.
 2. Refresh `GET /chat/analysis/second/all-results`.
+
+Project-scoped smart document analysis from Project Connectivity:
+
+1. Open the project detail and use its `memoId`.
+2. Load available analysis keyword tags with `GET /chat/analysis/keywords`.
+3. Upload PDF, Word, or Excel files to OSS with `GET /chat/file/getTemporaryToken` and the frontend OSS multipart upload helper, or provide `extraText` without files.
+4. Require at least one selected analysis keyword and at least one file or non-empty `extraText`.
+5. `POST /chat/analysis/second/submit-task` with `files`, `extraText`, comma-joined `keywordText`, and `memoId`.
+6. Poll `GET /chat/analysis/second/task-progress?taskId={taskId}` until `progress === 100`.
+7. Refresh `GET /chat/analysis/second/all-results?memoId={memoId}` or open the AI analysis history dialog.
+
+Example:
+
+```powershell
+python scripts\digclaw_request.py --method GET --path /chat/analysis/keywords
+python scripts\digclaw_request.py --method POST --path /chat/analysis/second/submit-task --data '{"files":[{"fileName":"memo.pdf","fileUrl":"https://cdn.example.com/memo.pdf"}],"extraText":"请重点关注商业化路径和技术壁垒","keywordText":"市场,技术","memoId":2001}'
+python scripts\digclaw_request.py --method GET --path /chat/analysis/second/task-progress --params '{"taskId":8888}'
+python scripts\digclaw_request.py --method GET --path /chat/analysis/second/all-results --params '{"memoId":2001}'
+```
 
 ## Industry Analysis
 

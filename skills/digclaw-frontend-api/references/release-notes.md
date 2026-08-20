@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.7.1 - 2026-08-19
+
+- Clarified that ordinary company searches should prefer keyword/advanced-filter search first, while telling users natural-language Smart Search is available but usually slower because it runs asynchronously and requires polling.
+- Expanded Project Connectivity guidance for `@智能纪要` and `@行业研究`, including action values, request payload shape, attachment context, and memo-detail polling behavior.
+- Added project-scoped smart document/AI analysis examples for loading analysis tags, submitting `memoId` tasks, polling progress, and refreshing memo results.
+
 ## 0.7.0 - 2026-08-18
 
 - Rebound source metadata to frontend `89c17667925db21ad7a8c98741b7eaa9b71f634b` and backend `3f25dad8dddc58f3d30c58ceacd2dc4c4304fcb4`.

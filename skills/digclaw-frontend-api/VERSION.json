@@ -1,17 +1,17 @@
 {
   "name": "digclaw-skill",
-  "version": "0.7.0",
-  "updated_at": "2026-08-18",
+  "version": "0.7.1",
+  "updated_at": "2026-08-19",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Updates the skill to match current frontend-visible DigClaw modules, including AI Conversation Search, Rhizome Agent, Public Asset Summary, company export, and admin controls.",
+  "summary": "Clarifies current DigClaw company-search choice guidance and expands Project Connectivity smart memo, industry research, and smart document examples.",
   "source_bindings": {
     "purpose": "developer-maintenance-only",
     "user_update_policy": "Users and agents should update this skill by comparing VERSION.json.version only. Source bindings must not block installation or updates.",
-    "bound_at": "2026-08-18",
+    "bound_at": "2026-08-19",
     "frontend": {
       "name": "digclaw-web",
       "remote": "https://github.com/digclaw/digclaw-web.git",

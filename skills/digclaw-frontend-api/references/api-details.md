@@ -199,6 +199,8 @@ python scripts\digclaw_request.py --method POST --path /chat/talents/v2/connecti
 
 `POST /chat/company-vector/search`
 
+Prefer this endpoint for ordinary company searches when the request can be represented by keywords, business tags, China/non-China scope, or advanced filters. Tell the user that natural-language Smart Search is available, but it normally takes longer because it starts an async search and requires history polling.
+
 Common body fields inferred from the frontend:
 
 | Name | Type | Notes |
@@ -237,6 +239,8 @@ Response:
 ### Natural language search
 
 `GET /chat/company-vector/integrated-search`
+
+Use this endpoint for exploratory or hard-to-structure company searches, or when the user explicitly chooses the slower smart-search path after being told it may take longer than keyword search.
 
 Query params:
 
@@ -818,7 +822,7 @@ python scripts\digclaw_request.py --method GET --path /chat/talents/v2/annotatio
 python scripts\digclaw_request.py --method POST --path /chat/talents/v2/annotation/add --params '{"talentId":10001}' --data '{"content":"已邮件沟通，等待回复"}'
 ```
 
-### Project Memo details, @AI, and reports
+### Project Memo details, agent mentions, and reports
 
 List filters:
 
@@ -826,12 +830,21 @@ List filters:
 python scripts\digclaw_request.py --method GET --path /chat/project-memo/list --params '{"pageNum":1,"pageSize":10,"keyword":"AI","docStatus":1,"leaderUserIds":"12,13","isInterested":1}'
 ```
 
-Paragraph plus mention-agent flow:
+Paragraph plus smart memo mention flow:
 
 ```powershell
-python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/content-paragraphs --data '{"title":"技术判断","content":"@AI 请基于附件总结技术壁垒","contentFormat":"html"}'
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/content-paragraphs --data '{"title":"会议纪要","content":"@智能纪要 请基于附件总结核心进展、待办和风险","contentFormat":"html"}'
 python scripts\digclaw_request.py --method GET --path /chat/project-memo/2001/attachments
-python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/agent/mention --data '{"action":"analyze","requesterName":"agent","currentTitle":"技术判断","currentContent":"@AI 请基于附件总结技术壁垒","currentText":"请基于附件总结技术壁垒","mentionedAttachments":[],"allAttachments":[],"otherParagraphs":[]}'
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/agent/mention --data '{"action":"smart_memo","requesterName":"agent","currentTitle":"会议纪要","currentContent":"@智能纪要 请基于附件总结核心进展、待办和风险","currentText":"@智能纪要 请基于附件总结核心进展、待办和风险","userInstruction":"请基于附件总结核心进展、待办和风险","mentionedAttachments":[],"allAttachments":[],"otherParagraphs":[]}'
+```
+
+Industry research mention flow:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/content-paragraphs --data '{"title":"行业研究","content":"@行业研究 请分析赛道规模、竞品、融资趋势和风险","contentFormat":"html"}'
+python scripts\digclaw_request.py --method GET --path /chat/project-memo/2001/attachments
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/agent/mention --data '{"action":"industry_research","requesterName":"agent","currentTitle":"行业研究","currentContent":"@行业研究 请分析赛道规模、竞品、融资趋势和风险","currentText":"@行业研究 请分析赛道规模、竞品、融资趋势和风险","userInstruction":"请分析赛道规模、竞品、融资趋势和风险","mentionedAttachments":[],"allAttachments":[],"otherParagraphs":[]}'
+python scripts\digclaw_request.py --method GET --path /chat/project-memo/2001
 ```
 
 Memo report update/delete:
@@ -884,10 +897,13 @@ python scripts\digclaw_request.py --method GET --path /chat/investor/opinion/pag
 
 ### AI second analysis
 
-Current submit body:
+Project-scoped smart document analysis from Project Connectivity uses the same second-analysis APIs, with `memoId` included. Load tags first, upload files to OSS when files are provided, then submit at least one file or non-empty `extraText` plus comma-joined `keywordText`.
 
 ```powershell
+python scripts\digclaw_request.py --method GET --path /chat/analysis/keywords
 python scripts\digclaw_request.py --method POST --path /chat/analysis/second/submit-task --data '{"files":[{"fileName":"memo.pdf","fileUrl":"https://cdn.example.com/memo.pdf"}],"extraText":"请关注商业化风险","keywordText":"市场,技术","memoId":2001}'
+python scripts\digclaw_request.py --method GET --path /chat/analysis/second/task-progress --params '{"taskId":8888}'
+python scripts\digclaw_request.py --method GET --path /chat/analysis/second/all-results --params '{"memoId":2001}'
 ```
 
 ### Industry Insight

@@ -7,9 +7,9 @@ Permission gate: `project-connectivity`.
 ## Responsibilities
 
 - Project memo list, detail, create/edit/delete, status, interest, leader filter.
-- Memo content paragraphs and `@AI` mention tasks.
+- Memo content paragraphs and agent mention tasks for `@智能纪要` and `@行业研究`.
 - Memo attachments and memo report generation.
-- Second analysis dialog scoped by `memoId`.
+- Smart document/AI second-analysis dialog scoped by `memoId`.
 - FA collaboration: recommended investors, selected investors, notes, attachments, FA reports.
 
 ## Initial Load
@@ -56,12 +56,34 @@ Permission gate: `project-connectivity`.
 3. Delete: `DELETE /chat/project-memo/{memoId}/content-paragraphs/{paragraphId}`.
 4. Refresh memo detail.
 
-### `@AI` Mention
+### Agent Mentions: 智能纪要 And 行业研究
 
-1. Save the paragraph first.
+The current editor mention menu exposes two agent actions:
+
+| User mention | Action value | Use when |
+|---|---|---|
+| `@智能纪要` | `smart_memo` | Generate a memo/summary from the current card, project context, and attachments. |
+| `@行业研究` | `industry_research` | Generate an industry research card with market, competitors, financing, and risk context. |
+
+1. Save the paragraph first through paragraph create/update.
 2. Load attachments: `GET /chat/project-memo/{memoId}/attachments`.
-3. `POST /chat/project-memo/{memoId}/agent/mention` with action, requester name, current paragraph title/content/text, mentioned attachments, all attachments, and other paragraphs.
-4. Refresh detail after generated content is expected.
+3. Extract linked attachments from paragraph content as `mentionedAttachments`; send all project attachments as `allAttachments`.
+4. Send one `POST /chat/project-memo/{memoId}/agent/mention` per action. A paragraph that contains both mentions triggers both actions.
+5. Include `userInstruction` as the paragraph plain text with the mention text removed.
+6. Send `otherParagraphs` from current project paragraphs, excluding the current paragraph and generated agent paragraphs.
+7. Refresh `GET /chat/project-memo/{memoId}` every ~2.5 seconds while generated content contains progress markers such as `## 生成进度`, `## Agent 实时执行记录`, `正在生成`, `正在调用 DeepResearch`, or `正在判断现有资料`.
+
+Smart memo request example:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/agent/mention --data '{"action":"smart_memo","requesterName":"agent","currentTitle":"会议纪要","currentContent":"@智能纪要 请结合附件总结本项目核心进展、待办和风险","currentText":"@智能纪要 请结合附件总结本项目核心进展、待办和风险","userInstruction":"请结合附件总结本项目核心进展、待办和风险","mentionedAttachments":[{"fileName":"memo.docx","fileUrl":"https://cdn.example.com/memo.docx","type":"DOCX"}],"allAttachments":[{"fileName":"memo.docx","fileUrl":"https://cdn.example.com/memo.docx","type":"DOCX"}],"otherParagraphs":[{"id":3001,"title":"项目背景","content":"<p>...</p>","text":"..."}]}'
+```
+
+Industry research request example:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/agent/mention --data '{"action":"industry_research","requesterName":"agent","currentTitle":"行业研究","currentContent":"@行业研究 请分析具身智能赛道规模、代表公司、融资趋势和主要风险","currentText":"@行业研究 请分析具身智能赛道规模、代表公司、融资趋势和主要风险","userInstruction":"请分析具身智能赛道规模、代表公司、融资趋势和主要风险","mentionedAttachments":[],"allAttachments":[],"otherParagraphs":[]}'
+```
 
 ### Rich-Text Attachment Insert
 
@@ -82,10 +104,24 @@ Permission gate: `project-connectivity`.
 
 ## Second Analysis Dialog
 
-1. Upload files through OSS or editor upload.
-2. `POST /chat/analysis/second/submit-task` with `files`, `extraText`, `keywordText`, `memoId`.
-3. Poll `GET /chat/analysis/second/task-progress?taskId={taskId}`.
-4. Refresh `GET /chat/analysis/second/all-results?memoId={memoId}`.
+This is the project-scoped smart document/AI analysis feature opened from Project Connectivity. It can analyze uploaded PDF, Word, and Excel files plus free-text instructions, then stores results under the current `memoId`.
+
+1. Load analysis tags: `GET /chat/analysis/keywords`.
+2. Upload files through the frontend OSS flow (`GET /chat/file/getTemporaryToken`, then multipart upload) and keep each uploaded `{ fileName, fileUrl }`.
+3. Require at least one file or non-empty `extraText`.
+4. Require at least one selected analysis tag; join selected tags as comma-separated `keywordText`.
+5. `POST /chat/analysis/second/submit-task` with `files`, `extraText`, `keywordText`, `memoId`.
+6. Poll `GET /chat/analysis/second/task-progress?taskId={taskId}` until `progress === 100`.
+7. Refresh `GET /chat/analysis/second/all-results?memoId={memoId}` or open the page's history dialog.
+
+Example:
+
+```powershell
+python scripts\digclaw_request.py --method GET --path /chat/analysis/keywords
+python scripts\digclaw_request.py --method POST --path /chat/analysis/second/submit-task --data '{"files":[{"fileName":"project.xlsx","fileUrl":"https://cdn.example.com/project.xlsx"}],"extraText":"请提炼商业模式、竞争格局和风险点","keywordText":"市场,商业和竞争,发展风险","memoId":2001}'
+python scripts\digclaw_request.py --method GET --path /chat/analysis/second/task-progress --params '{"taskId":8888}'
+python scripts\digclaw_request.py --method GET --path /chat/analysis/second/all-results --params '{"memoId":2001}'
+```
 
 ## FA Collaboration
 

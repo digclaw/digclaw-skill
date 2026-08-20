@@ -160,7 +160,7 @@ Detail actions:
 - Load AI analysis result list: `GET /chat/analysis/second/all-results?memoId={id}`.
 - View attachments: `GET /chat/project-memo/{id}/attachments`; attachment dialog also refreshes report task and report metadata.
 - Paragraph add/update/delete: `/chat/project-memo/{memoId}/content-paragraphs...`, then refresh detail.
-- If paragraph content mentions `@智能纪要` or `@行业研究`, the page calls `POST /chat/project-memo/{memoId}/agent/mention` with action, paragraph text, mentioned attachments, all attachments, and other paragraphs.
+- If paragraph content mentions `@智能纪要` or `@行业研究`, the page calls `POST /chat/project-memo/{memoId}/agent/mention` with action `smart_memo` or `industry_research`, paragraph text, `userInstruction`, mentioned attachments, all attachments, and other non-generated paragraphs. It then polls memo detail every ~2.5 seconds while generated paragraphs show progress markers.
 - Editor file insert uploads through `/chat/file/upload` helper and then registers the file in `PUT /chat/project-memo/{id}/attachments`.
 
 ## Memo Attachments And Reports
@@ -220,7 +220,7 @@ Investor and opinion actions:
 There are two current AI analysis surfaces.
 
 - Standalone `Home/AiAnalyze.vue` loads `GET /chat/analysis/keywords` and `GET /chat/analysis/second/all-results`, submits `POST /chat/analysis/second/submit-task`, polls `GET /chat/analysis/second/task-progress?taskId={id}`, and deletes with `POST /chat/analysis/second/delete-task`.
-- Project Memo detail opens `AIAnalyzeDialog.vue`, which uses the same second-analysis APIs but includes `memoId`, file metadata, `keywordText`, and optional `extraText`.
+- Project Memo detail opens `AIAnalyzeDialog.vue`, the smart document/AI analysis dialog. It loads `/chat/analysis/keywords`, accepts OSS-uploaded PDF/Word/Excel files or `extraText`, requires selected keyword tags, submits `/chat/analysis/second/submit-task` with `memoId`, and polls task progress before refreshing memo-scoped results.
 
 ## Industry Analysis
 
