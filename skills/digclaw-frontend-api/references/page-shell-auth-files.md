@@ -31,7 +31,7 @@ clientid: b7bf1120a216184a9e0f4ca0e9c508bb
 5. `GET /chat/user/info`.
 6. `GET /chat/user/permission`.
 7. `GET /chat/user/settings`.
-8. Choose the first accessible page in this order: Smart Search, AI Conversation Search, Rhizome Agent, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis, Public Asset Summary. Admin Accounts is only for `MASTER` or `Account Administration`.
+8. Choose the first accessible page in this order: Smart Search, AI Conversation Search, Rhizome Agent, File Transcription, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis, Public Asset Summary. Admin Accounts is only for `MASTER` or `Account Administration`.
 
 Helper:
 

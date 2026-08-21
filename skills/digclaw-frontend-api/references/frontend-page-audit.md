@@ -22,6 +22,7 @@ The visible current shell uses `accessibleFunctions` from `GET /chat/user/permis
 | Smart Search | `Home/SmartSearch.vue` | `Smart Search` | Contains company search, curated list access, CSV-generated company search entry, and talent natural search. |
 | AI Conversation Search | `Home/AgentSearchWorkspace.vue` | `AI Conversation Search` | Conversational company/talent agent search with streamed turns, history, AI check, enrichment, and local CSV export. |
 | Rhizome Agent | `Home/RhizomeAgent.vue` | `Rhizome Agent` | DigClaw-native page that calls the external Rhizome API for health, file upload, and streamed research tasks. |
+| File Transcription | `Home/FileTranscription.vue` | `File Transcription` | Upload/transcribe workspace with persisted records, status polling, full text, retry, and deletion. |
 | Talent Matrix | `Home/Talents.vue` | `Talent Matrix` | Current talent V2 page. |
 | Project Connectivity | `Home/NewMemoV3.vue` | `Project Connectivity` | Current Project Memo page plus FA collaboration and AI analysis dialogs. |
 | Venture Investment Directory | `Home/Investors1.vue` | `Venture Investment Directory` | Investor directory, parsing tasks, opinions. |
@@ -114,6 +115,18 @@ Turns:
 - Default Rhizome base: `https://rhizome.diggen.cn/`, overridable by `VUE_APP_RHIZOME_AGENT_URL`.
 - The page is a native DigClaw UI, not an iframe. Logs live inside a scrollable event container and do not stretch the page.
 
+## File Transcription Page
+
+`src/views/Home/FileTranscription.vue` owns `activeMenu === 16`. It is gated by `File Transcription` in `accessibleFunctions`.
+
+- Initial/list refresh: `GET /chat/file-transcription/page` with page, keyword, and status filters.
+- Manual flow: upload to `POST /chat/file/upload`, then `POST /chat/file-transcription/start` with `sourceType: MANUAL` and `force: true`.
+- Full record/text: `GET /chat/file-transcription/{id}`.
+- Retry: repeat `/start` with the selected file/source metadata and `force: true`.
+- Delete: `DELETE /chat/file-transcription/{id}`.
+- The page polls every 3 seconds only while a visible/selected record is processing.
+- Copy and `.txt` download are browser-local operations.
+
 ## Talent Matrix Page
 
 `src/views/Home/Talents.vue` owns current talent V2 lists, favorites, assignments, export, and high-level detail routing.
@@ -172,6 +185,8 @@ Detail actions:
 - Upload flow: `GET /chat/file/getTemporaryToken`, OSS multipart upload, then `PUT /chat/project-memo/{memoId}/attachments`.
 - Delete attachment rebuilds the attachment array and calls `PUT /chat/project-memo/{memoId}/attachments`.
 - Generate report: `POST /chat/project-memo/{memoId}/report/generate?attachmentId={attachmentId}`, poll `GET /chat/project-memo/report-task/{taskId}` every 2.5 seconds, refresh task/report lists, and refresh memo detail on success.
+- Attachment transcription metadata: `GET /chat/file-transcription/latest` for each attachment, refreshed with the normal 5-second attachment metadata loop.
+- Start/restart attachment transcription: `POST /chat/file-transcription/start` with `sourceType: PROJECT_MEMO_ATTACHMENT`, attachment `sourceId`, memo `businessId`, and `force: true`; full text uses `GET /chat/file-transcription/{id}`.
 - Report view dialog can update/delete reports through `PUT`/`DELETE /chat/project-memo/{memoId}/report/{reportId}`.
 
 ## FA Collaboration

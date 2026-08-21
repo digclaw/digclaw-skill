@@ -25,7 +25,7 @@ Bootstrap after token exists:
 1. `GET /chat/user/info`
 2. `GET /chat/user/permission`
 3. `GET /chat/user/settings`
-4. Select the first accessible current menu in this order: Smart Search, AI Conversation Search, Rhizome Agent, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis, Public Asset Summary. `MASTER` or `Account Administration` can open Admin Accounts.
+4. Select the first accessible current menu in this order: Smart Search, AI Conversation Search, Rhizome Agent, File Transcription, Talent Matrix, Project Connectivity, Venture Investment Directory, Industry Analysis, Public Asset Summary. `MASTER` or `Account Administration` can open Admin Accounts.
 5. Load shell side data when needed:
    - `GET /chat/userConversation/list`
    - `GET /chat/label/list`
@@ -254,6 +254,23 @@ Talent natural search from Smart Search:
 2. Save/show returned people rows as the current results for the "个人" tab.
 3. Store history with `POST /chat/user-record/add` using `tab: "个人"` and `searchType: "自然语言搜索"`.
 
+## File Transcription
+
+List or search persisted text:
+
+1. Check `file-transcription` permission.
+2. `GET /chat/file-transcription/page` with `pageNum`, `pageSize`, and optional `keyword`, `status`, or `sourceType`.
+3. Open full text with `GET /chat/file-transcription/{id}`.
+
+Upload and transcribe:
+
+1. Reject files larger than 500MB.
+2. Upload through `POST /chat/file/upload`; require the returned file URL.
+3. `POST /chat/file-transcription/start` with file metadata, `sourceType: "MANUAL"`, and `force: true`.
+4. Poll the page/detail about every 3 seconds while status is `1`; stop on `2` or `3`.
+
+Restart by resubmitting the selected record's file/source fields with `force: true`. Soft-delete with `DELETE /chat/file-transcription/{id}` and refresh the page. Copy/download of successful text is local behavior.
+
 ## Project Memo Page
 
 Initial load:
@@ -331,6 +348,15 @@ Insert attachment from memo editor:
 4. Insert the uploaded file URL/name into the editor content.
 
 ## Memo Report Generation
+
+Memo attachment transcription:
+
+1. Load attachments with `GET /chat/project-memo/{memoId}/attachments`.
+2. For each file URL, query `GET /chat/file-transcription/latest` with `sourceType: PROJECT_MEMO_ATTACHMENT` and `sourceId` when available.
+3. Start/restart with `POST /chat/file-transcription/start`, passing attachment metadata, `sourceId`, `businessId: memoId`, and `force: true`.
+4. Refresh about every 5 seconds while processing, then load full text by record ID.
+
+Internal text extraction performed by memo initialization, mention agents, memo/FA report generation, and second analysis now persists File Transcription records as part of those existing workflows.
 
 Generate a report from a memo attachment:
 

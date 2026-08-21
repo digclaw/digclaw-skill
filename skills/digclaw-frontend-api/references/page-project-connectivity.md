@@ -9,6 +9,7 @@ Permission gate: `project-connectivity`.
 - Project memo list, detail, create/edit/delete, status, interest, leader filter.
 - Memo content paragraphs and agent mention tasks for `@智能纪要` and `@行业研究`.
 - Memo attachments and memo report generation.
+- Attachment transcription with persisted text shared with the File Transcription workspace.
 - Smart document/AI second-analysis dialog scoped by `memoId`.
 - FA collaboration: recommended investors, selected investors, notes, attachments, FA reports.
 
@@ -92,6 +93,18 @@ python scripts\digclaw_request.py --method POST --path /chat/project-memo/2001/a
 3. If needed, `PUT /chat/project-memo/{memoId}/attachments` with the full next attachment list.
 
 ## Memo Reports
+
+### Memo Attachment Transcription
+
+The attachment dialog refreshes transcription metadata together with report metadata.
+
+1. Load project attachments with `GET /chat/project-memo/{memoId}/attachments`.
+2. For each attachment with a file URL, locate persisted text with `GET /chat/file-transcription/latest` using `fileUrl`, `sourceType: "PROJECT_MEMO_ATTACHMENT"`, and the attachment `sourceId` when available.
+3. Start or restart with `POST /chat/file-transcription/start` using the attachment file fields, `sourceType: "PROJECT_MEMO_ATTACHMENT"`, `sourceId: attachment.id`, `businessId: memoId`, and `force: true`.
+4. While processing, refresh latest records with the attachment dialog's normal ~5-second metadata loop.
+5. When successful, load full text with `GET /chat/file-transcription/{recordId}`. Copy/download are local frontend operations.
+
+Project initialization, `@智能纪要`/`@行业研究`, memo/FA attachment report generation, and project-scoped second analysis now also persist their internally extracted text as transcription records. Query existing records before starting duplicate manual work.
 
 1. Confirm attachment exists via `GET /chat/project-memo/{memoId}/attachments`.
 2. `POST /chat/project-memo/{memoId}/report/generate?attachmentId={attachmentId}`.

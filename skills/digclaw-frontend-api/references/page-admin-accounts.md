@@ -52,4 +52,4 @@ Note: `updateAdminUserExpiry` exists in the API helper, but the current page edi
 | Toggle status | `PUT /chat/admin/account-types/{id}/status` | body `{ status: 1|0 }`; refresh options |
 | Delete | `DELETE /chat/admin/account-types/{id}` | refresh list and options |
 
-Current permission function options include `Smart Search`, `AI Conversation Search`, `Talent Matrix`, `Project Connectivity`, `Industry Analysis`, `Company Search`, `View Curated List`, `Venture Investment Directory`, `Investment Views Editor`, `Public Asset Summary`, `Rhizome Agent`, `Account Administration`, and legacy `AI Souring`.
+Current permission function options include `Smart Search`, `AI Conversation Search`, `Talent Matrix`, `Project Connectivity`, `Industry Analysis`, `Company Search`, `View Curated List`, `Venture Investment Directory`, `Investment Views Editor`, `Public Asset Summary`, `Rhizome Agent`, `File Transcription`, `Account Administration`, and legacy `AI Souring`. The current backend default grants `File Transcription` to `MASTER`.

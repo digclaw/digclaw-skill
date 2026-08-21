@@ -660,6 +660,7 @@ Permission response shape:
       "Project Connectivity",
       "Venture Investment Directory",
       "Industry Analysis",
+      "File Transcription",
       "Account Administration"
     ]
   }
@@ -793,6 +794,30 @@ curl.exe -N -X POST https://rhizome.diggen.cn/api/research/stream ^
 ```
 
 Expected stream messages are `type=start`, `type=log`, `type=error`, `type=result`, then `data: [DONE]`.
+
+## File Transcription
+
+List/filter records:
+
+```powershell
+python scripts\digclaw_request.py --method GET --path /chat/file-transcription/page --params '{"pageNum":1,"pageSize":12,"keyword":"meeting","status":2}'
+```
+
+Start a manual transcription after `/chat/file/upload` returns a URL:
+
+```powershell
+python scripts\digclaw_request.py --method POST --path /chat/file-transcription/start --data '{"fileName":"meeting.mp4","fileUrl":"https://cdn.example.com/meeting.mp4","fileType":"mp4","sourceType":"MANUAL","force":true}'
+```
+
+Inspect, locate latest, or delete:
+
+```powershell
+python scripts\digclaw_request.py --method GET --path /chat/file-transcription/7001
+python scripts\digclaw_request.py --method GET --path /chat/file-transcription/latest --params '{"fileUrl":"https://cdn.example.com/meeting.mp4","sourceType":"MANUAL"}'
+python scripts\digclaw_request.py --method DELETE --path /chat/file-transcription/7001
+```
+
+Status is `0` pending, `1` processing, `2` success, or `3` failed. Poll every ~3 seconds only while status is `1`. `force: true` creates a retry/new record; without force, the backend can reuse the latest processing or successful match.
 
 ### Talent detail and manual connection
 

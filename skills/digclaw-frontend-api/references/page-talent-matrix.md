@@ -53,6 +53,8 @@ Always fetch `GET /chat/talents/v2/tags` before the first talent list/search req
 3. Toggle interest: `POST /chat/talents/v2/toggle-interest`.
 4. Add annotation: `POST /chat/talents/v2/annotation/add?talentId={id}`.
 
+For detail skill-matching text, use the response as resolved by the backend. When `classifyTag` contains the dynamic `顶级期刊监测` scenario and `matchSkills` is present, the backend maps that pre-generated text into `skillMatching`/`aiEdgeChipMatchReason` and leaves confidence null. Otherwise it falls back to the cached `AI端侧芯片` match reason. Do not overwrite this resolved text client-side or infer confidence when the response omits it.
+
 ### Connection Status
 
 1. `POST /chat/talents/v2/connection/toggleTalentStatus` with `talentId`, `statusCode`.

@@ -10,6 +10,7 @@ Use this index first. The current frontend is route `/` -> `src/views/home.vue`;
 | 智能搜索 / 公司云库 | 9 | `Home/SmartSearch.vue` | `Smart Search` | `smart-search` | `page-smart-search.md` |
 | AI 对话搜索 | 14 | `Home/AgentSearchWorkspace.vue` | `AI Conversation Search` | `agent-conversation-search` | `page-agent-conversation-search.md` |
 | Rhizome Agent | 15 | `Home/RhizomeAgent.vue` | `Rhizome Agent` | `rhizome-agent` | `page-rhizome-agent.md` |
+| 文件转录 | 16 | `Home/FileTranscription.vue` | `File Transcription` | `file-transcription` | `page-file-transcription.md` |
 | 人才矩阵 | 7 | `Home/Talents.vue` + talent panels | `Talent Matrix` | `talent-matrix` | `page-talent-matrix.md` |
 | 项目通联 | 4 | `Home/NewMemoV3.vue` + memo dialogs | `Project Connectivity` | `project-connectivity` | `page-project-connectivity.md` |
 | 创投名录 | 12 | `Home/Investors1.vue` + investor dialogs | `Venture Investment Directory` | `venture-directory` | `page-venture-directory.md` |

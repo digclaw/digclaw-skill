@@ -21,6 +21,7 @@ PAGE_RULES = {
     "smart-search.curated-list": {"functions": ["Smart Search", "View Curated List"]},
     "agent-conversation-search": {"functions": ["AI Conversation Search"]},
     "rhizome-agent": {"functions": ["Rhizome Agent"]},
+    "file-transcription": {"functions": ["File Transcription"]},
     "talent-matrix": {"functions": ["Talent Matrix"]},
     "project-connectivity": {"functions": ["Project Connectivity"]},
     "venture-directory": {"functions": ["Venture Investment Directory"]},

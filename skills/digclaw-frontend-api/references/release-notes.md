@@ -2,6 +2,14 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.8.0 - 2026-08-21
+
+- Rebound the audited frontend to `cbe06ab` and backend to `692affd`.
+- Added the `File Transcription` page, permission key, upload/start flow, record filters, processing polling, detail, retry, latest lookup, soft deletion, and local text copy/download behavior.
+- Documented persisted transcription records produced by project initialization, memo agents, memo/FA reports, project attachment actions, and second AI analysis.
+- Updated Project Connectivity attachment workflows to locate, start, monitor, and inspect attachment transcription text.
+- Documented talent-detail skill matching precedence for dynamic `顶级期刊监测` tags versus the cached `AI端侧芯片` fallback.
+
 ## 0.7.4 - 2026-08-21
 
 - Required tag-aware frontend operations to fetch current page tag/filter options before related search or list requests.

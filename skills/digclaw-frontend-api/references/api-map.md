@@ -253,6 +253,16 @@ Rhizome endpoints use the external Rhizome base URL, default `https://rhizome.di
 | Upload task file | `RhizomeAgent.vue` | POST multipart | `{rhizomeBase}/api/files` |
 | Run streamed research | `RhizomeAgent.vue` | POST SSE | `{rhizomeBase}/api/research/stream` |
 
+## File Transcription
+
+| Page feature | Frontend function | Method | Path |
+|---|---|---|---|
+| List/filter records | `fileTranscriptionPageAPI` | GET | `/chat/file-transcription/page` |
+| Start/restart transcription | `fileTranscriptionStartAPI` | POST | `/chat/file-transcription/start` |
+| Record detail/full text | `fileTranscriptionDetailAPI` | GET | `/chat/file-transcription/{id}` |
+| Latest matching file/source record | `fileTranscriptionLatestAPI` | GET | `/chat/file-transcription/latest` |
+| Soft-delete record | `fileTranscriptionDeleteAPI` | DELETE | `/chat/file-transcription/{id}` |
+
 ## Industry Insight
 
 Insight paths use `https://v3-api.diggen.cn/insight`.

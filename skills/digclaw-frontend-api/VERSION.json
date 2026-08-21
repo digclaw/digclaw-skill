@@ -1,22 +1,22 @@
 {
   "name": "digclaw-skill",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "updated_at": "2026-08-21",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Adds tag-aware page operations that fetch current options first and apply only relevant server-provided tags.",
+  "summary": "Adds the File Transcription workspace and persisted transcription integration for project and AI file-processing flows.",
   "source_bindings": {
     "purpose": "developer-maintenance-only",
     "user_update_policy": "Users and agents should update this skill by comparing VERSION.json.version only. Source bindings must not block installation or updates.",
-    "bound_at": "2026-08-19",
+    "bound_at": "2026-08-21",
     "frontend": {
       "name": "digclaw-web",
       "remote": "https://github.com/digclaw/digclaw-web.git",
       "branch": "v3_dev",
-      "commit": "89c17667925db21ad7a8c98741b7eaa9b71f634b",
+      "commit": "cbe06ab6930eee656a6814eef2676b9caf0adfe6",
       "local_audit_path": "G:\\digclaw_server\\diggenai_web",
       "worktree": "clean"
     },
@@ -24,7 +24,7 @@
       "name": "digclaw-server",
       "remote": "https://github.com/digclaw/digclaw-server.git",
       "branch": "v3_dev",
-      "commit": "3f25dad8dddc58f3d30c58ceacd2dc4c4304fcb4",
+      "commit": "692affd5ab71e1eafb0615e892c14829622c9c52",
       "local_audit_path": "G:\\digclaw_server\\diggenai",
       "worktree": "clean"
     }

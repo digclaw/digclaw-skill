@@ -37,6 +37,7 @@ The helper prints JSON. Continue only when `allowed` is `true`. Credential resol
 | Smart Search curated list | `smart-search.curated-list` | `Smart Search` and `View Curated List` |
 | AI Conversation Search | `agent-conversation-search` | `AI Conversation Search` |
 | Rhizome Agent | `rhizome-agent` | `Rhizome Agent` |
+| File Transcription | `file-transcription` | `File Transcription` |
 | Talent Matrix | `talent-matrix` | `Talent Matrix` |
 | Project Connectivity | `project-connectivity` | `Project Connectivity` |
 | Venture Investment Directory | `venture-directory` | `Venture Investment Directory` |

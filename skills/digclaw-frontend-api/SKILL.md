@@ -24,7 +24,7 @@ For detailed environment and request behavior, read `references/frontend-context
 2. When developing the next skill version or auditing page/API docs, compare the local frontend/backend source repos with `python scripts/check_source_bindings.py`, then read `references/source-bindings.md` before trusting old page/API documentation. Source bindings are developer maintenance context only; do not use them to block user installation or updates.
 3. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, permission gates, and page keys.
 4. Enforce the frontend permission gate with `python scripts/check_permission.py --page <page-key>`. This uses the cached login session when no token is passed. If it is denied, stop and explain that the current account cannot use the requested page or feature.
-5. Read exactly one page guide for the target page: `page-smart-search.md`, `page-agent-conversation-search.md`, `page-rhizome-agent.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-public-assets.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
+5. Read exactly one page guide for the target page: `page-smart-search.md`, `page-agent-conversation-search.md`, `page-rhizome-agent.md`, `page-file-transcription.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-public-assets.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
 6. Before a page search/list operation, fetch the page's current tag or filter-option endpoint when the page guide exposes one. Decide from the returned options and the user's intent whether a tag should constrain the request; never guess an unavailable tag or add one merely because the endpoint exists.
 7. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
 8. Use `references/api-details.md` only when request/response examples or field shapes are needed.
@@ -115,6 +115,7 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - Smart Search / Company Cloud: company and talent search, history, detail, members, export, CSV tasks
 - AI Conversation Search: conversational company/talent search, streamed turns, history conversations, AI check, candidate export
 - Rhizome Agent: accepts a prediction question or research topic, performs reasoning/research, and returns a supported answer; also supports optional uploads and streamed task logs
+- File Transcription: upload files, persist extracted text, monitor/retry tasks, search records, and inspect/download transcription text
 - Talent Matrix: talent list/detail, favorites, annotations, connection status, connection text, export
 - Project Connectivity: project memo list/detail, paragraphs, attachments, reports, second analysis, FA collaboration
 - Venture Investment Directory: investor parse tasks, investor CRUD, attachments, opinions
@@ -133,6 +134,7 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - `references/page-smart-search.md`: Smart Search and Company Cloud operations
 - `references/page-agent-conversation-search.md`: AI Conversation Search streamed agent search operations
 - `references/page-rhizome-agent.md`: Rhizome Agent page backed by the external Rhizome API
+- `references/page-file-transcription.md`: file upload, persisted transcription records, polling, detail, retry, and deletion
 - `references/page-talent-matrix.md`: Talent Matrix operations
 - `references/page-project-connectivity.md`: Project Connectivity, memo, FA, and reports
 - `references/page-venture-directory.md`: Venture Investment Directory operations
