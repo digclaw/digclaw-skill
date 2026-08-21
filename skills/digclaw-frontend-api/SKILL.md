@@ -25,15 +25,28 @@ For detailed environment and request behavior, read `references/frontend-context
 3. Identify the frontend page/module first, not the endpoint. Read `references/page-operation-index.md` to map UI labels, `activeMenu`, components, permission gates, and page keys.
 4. Enforce the frontend permission gate with `python scripts/check_permission.py --page <page-key>`. This uses the cached login session when no token is passed. If it is denied, stop and explain that the current account cannot use the requested page or feature.
 5. Read exactly one page guide for the target page: `page-smart-search.md`, `page-agent-conversation-search.md`, `page-rhizome-agent.md`, `page-talent-matrix.md`, `page-project-connectivity.md`, `page-venture-directory.md`, `page-industry-analysis.md`, `page-public-assets.md`, `page-admin-accounts.md`, `page-ai-sourcing-analysis.md`, or `page-shell-auth-files.md`.
-6. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
-7. Use `references/api-details.md` only when request/response examples or field shapes are needed.
-8. Use `references/api-map.md` as a compact endpoint index after the page guide, not as the primary workflow source.
-9. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
-10. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
-11. Verify the API response and summarize the result in user-facing terms.
-12. For company or talent discovery, do not stop after one literal query or the first result page. Apply the adaptive search strategy below unless the user explicitly requests an exact single-query lookup.
-13. End every successful user-facing operation with 2-4 contextual next actions so the user knows what they can do next.
-14. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
+6. Before a page search/list operation, fetch the page's current tag or filter-option endpoint when the page guide exposes one. Decide from the returned options and the user's intent whether a tag should constrain the request; never guess an unavailable tag or add one merely because the endpoint exists.
+7. Execute the operation sequence from that page guide, including polling, refresh calls, and child-dialog calls.
+8. Use `references/api-details.md` only when request/response examples or field shapes are needed.
+9. Use `references/api-map.md` as a compact endpoint index after the page guide, not as the primary workflow source.
+10. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
+11. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
+12. Verify the API response and summarize the result in user-facing terms.
+13. For company or talent discovery, do not stop after one literal query or the first result page. Apply the adaptive search strategy below unless the user explicitly requests an exact single-query lookup.
+14. End every successful user-facing operation with 2-4 contextual next actions so the user knows what they can do next.
+15. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
+
+## Tag-Aware Page Operations
+
+Treat frontend tag lists as dynamic server data, not stable vocabulary. When the selected page exposes tags or comparable filter options:
+
+1. Fetch the current options before the related search/list request, even if a likely label is already known from prior use or screenshots.
+2. Compare the user's requested concepts with the returned labels. Select only options that materially express a requested constraint or improve precision without excluding plausible desired results.
+3. Use the page's exact returned value and request field. Do not invent tags, silently substitute a merely similar label, or send UI-only values such as `all` when the frontend converts them to `null`/omitted.
+4. If no returned tag clearly matches, omit the tag filter and rely on keywords or other supported filters. When the request is exploratory, prefer an untagged first pass if a tag would over-constrain recall; a tagged follow-up can refine broad results.
+5. Reuse the fetched list during the current operation, but refresh it for a later independent operation because available tags may change.
+
+This rule applies only where the current frontend/page guide has a real tag-options endpoint and a corresponding request field. It does not authorize inventing filters for pages that only display record tags.
 
 ## Adaptive Company And Talent Search
 

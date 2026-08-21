@@ -18,10 +18,12 @@ When a user asks to search companies, prefer Company Keyword Search when the req
 
 Before the first request, derive multiple plausible keyword formulations from the user's intent. Search the strongest formulation first, assess actual record relevance, then use alternate synonyms, bilingual terms, abbreviations, adjacent categories, product names, or relaxed non-essential constraints when the initial results are insufficient. Preserve explicit hard constraints. For each useful formulation, request subsequent `page` values while more records remain and additional coverage is valuable; merge and deduplicate results by company ID. A successful but irrelevant first response is not a stopping condition.
 
+Always fetch `GET /chat/company-vector/business-tags` before building a company keyword-search request. Compare the current returned labels with the user's needs and include only clearly relevant exact values in `businessTags`. Leave `businessTags: []` when no label fits, when the user asks for broad discovery, or when a plausible tag would exclude relevant companies. Do not derive request tags from the “特点标签” displayed on result rows; those are record data, not necessarily valid filter options. The current frontend natural-language path sends `businessTags: []`, so preserve that behavior unless current source code changes.
+
 ## Initial Load
 
 1. `GET /chat/user/permission`.
-2. `GET /chat/company-vector/business-tags`.
+2. `GET /chat/company-vector/business-tags`, then decide whether the user's request should use any returned exact values as `businessTags`.
 3. `GET /chat/company-vector/statistics`.
 4. `GET /chat/company-vector/filters` when advanced filter is opened.
 5. `GET /chat/company/contactStatus/types`.
@@ -34,7 +36,7 @@ Before the first request, derive multiple plausible keyword formulations from th
 
 Use this first for normal company search requests. It returns result rows directly and matches the faster current frontend path.
 
-1. Build body with `keywords`, `page`, `size`, `chinesePeople`, `businessTags`, `establishTimeOrder`, and optional advanced filter values.
+1. Build body with `keywords`, `page`, `size`, `chinesePeople`, `businessTags`, `establishTimeOrder`, and optional advanced filter values. `businessTags` must contain only relevant values from the just-fetched tag list; otherwise use `[]`.
 2. `POST /chat/company-vector/search`.
 3. Display returned rows.
 4. `POST /chat/user-record/add` with `tab: "公司"`, `searchType: "关键词搜索"`, and JSON `recordData`.

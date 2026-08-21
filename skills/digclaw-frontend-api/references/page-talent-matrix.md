@@ -16,9 +16,11 @@ Permission gate: `talent-matrix`.
 
 Do not treat the user's wording as the only valid `keyword`. Derive role-title variants, seniority terms, skills, technologies, research fields, employer types/names, locations, and Chinese/English equivalents that retain the user's hard constraints. Start with high-signal combinations; if returned people are sparse or irrelevant, try materially different expansions or relax only non-essential terms. Continue through `pageNum` while `data.total` shows more records and later pages may improve coverage. Merge and deduplicate by talent ID, and stop when useful coverage is reached or new pages/queries become repetitive.
 
+Always fetch `GET /chat/talents/v2/tags` before the first talent list/search request. Compare the returned labels with the user's requested profile and set `tag` to one exact returned value only when it is a meaningful constraint. Otherwise send `tag: null`; the frontend's `all` value is UI state and is converted to `null` for the API. Do not infer valid filter values from the “人才标签” shown on individual result rows. When both keyword and tag could apply, use the tag only if it improves precision without hiding plausible matches; for broad discovery, search without a tag first and optionally use a relevant tag in a refinement pass.
+
 ## Initial Load
 
-1. `GET /chat/talents/v2/tags`.
+1. `GET /chat/talents/v2/tags`, then decide whether one returned exact value should be sent as `tag`; otherwise use `null`.
 2. `GET /chat/talents/v2/connection/talentStatus/types`.
 3. `GET /chat/companyMember/agentUsers`.
 4. `GET /chat/talents/v2/favorite/list`.
@@ -28,7 +30,7 @@ Do not treat the user's wording as the only valid `keyword`. Derive role-title v
 
 ### List/Search/Filter
 
-1. Reset `pageNum` to `1`.
+1. Reset `pageNum` to `1` and normalize the tag selection: one relevant exact server-provided tag, or `null` for no tag/“all”.
 2. `GET /chat/talents/v2/list`.
 3. Use `data.records`, `data.total`, `data.contactStatusCount`.
 4. For infinite scroll, increment `pageNum` and append `records`.

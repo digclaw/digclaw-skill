@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.7.4 - 2026-08-21
+
+- Required tag-aware frontend operations to fetch current page tag/filter options before related search or list requests.
+- Added relevance-based tag selection: use only exact server-provided values when they materially match the user's request; otherwise omit the filter.
+- Documented company `businessTags` behavior and talent `tag` normalization, including that displayed record tags and UI `all` values are not request-filter values.
+
 ## 0.7.3 - 2026-08-21
 
 - Defined Rhizome Agent's primary role as answering prediction questions and research topics through reasoning and evidence-backed research.
