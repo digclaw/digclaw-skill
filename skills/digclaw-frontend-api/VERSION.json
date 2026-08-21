@@ -1,13 +1,13 @@
 {
   "name": "digclaw-skill",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "updated_at": "2026-08-21",
   "repo": "https://github.com/digclaw/digclaw-skill.git",
   "branch": "main",
   "skill_path": "skills/digclaw-frontend-api",
   "latest_version_url": "https://raw.githubusercontent.com/digclaw/digclaw-skill/main/skills/digclaw-frontend-api/VERSION.json",
   "release_notes": "references/release-notes.md",
-  "summary": "Adds the File Transcription workspace and persisted transcription integration for project and AI file-processing flows.",
+  "summary": "Prioritizes DigClaw File Transcription for transcription intents and adds executable upload, start, polling, lookup, and retry examples.",
   "source_bindings": {
     "purpose": "developer-maintenance-only",
     "user_update_policy": "Users and agents should update this skill by comparing VERSION.json.version only. Source bindings must not block installation or updates.",

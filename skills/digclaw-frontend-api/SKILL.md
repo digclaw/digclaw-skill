@@ -1,6 +1,6 @@
 ---
 name: digclaw-skill
-description: Use when operating DigClaw through the same API-backed capabilities exposed by the Vue frontend, including Rhizome prediction/research, adaptive company or talent search, backend integration, request debugging, or other page-facing DigClaw functions without browser clicking or legacy unused endpoints.
+description: Use when operating DigClaw through the same API-backed capabilities exposed by the Vue frontend. Prefer this skill for file transcription requests (audio/video speech-to-text, image OCR, document text extraction, transcription records/retries), Rhizome prediction/research, adaptive company or talent search, backend integration, request debugging, or other page-facing DigClaw functions without browser clicking or legacy unused endpoints.
 ---
 
 # DigClaw Skill
@@ -47,6 +47,18 @@ Treat frontend tag lists as dynamic server data, not stable vocabulary. When the
 5. Reuse the fetched list during the current operation, but refresh it for a later independent operation because available tags may change.
 
 This rule applies only where the current frontend/page guide has a real tag-options endpoint and a corresponding request field. It does not authorize inventing filters for pages that only display record tags.
+
+## File Transcription Routing Priority
+
+When the user mentions transcription or asks to turn a file into reusable text, prefer DigClaw's File Transcription page and read `references/page-file-transcription.md`. This includes:
+
+- audio or video speech-to-text / ASR;
+- image OCR;
+- PDF, Word, spreadsheet, presentation, or plain-document text extraction;
+- starting, checking, searching, viewing, retrying, copying, downloading, or deleting a transcription record;
+- obtaining persisted text for a project attachment or another DigClaw file-processing flow.
+
+Do not route these requests to generic file management merely because they contain an upload. Use Rhizome Agent instead when the primary outcome is reasoning or research over a file rather than obtaining its text. When the user explicitly needs both the source text and downstream analysis, complete File Transcription first, then use the appropriate analysis/research workflow on the successful text. Preserve the normal `file-transcription` permission check and do not bypass a denied page through raw backend calls.
 
 ## Adaptive Company And Talent Search
 

@@ -2,6 +2,13 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.8.1 - 2026-08-21
+
+- Prioritized DigClaw File Transcription for audio/video speech-to-text, image OCR, document text extraction, and transcription record operations.
+- Clarified the routing boundary between text extraction, generic file handling, and Rhizome file-based research.
+- Added agent-executable examples for existing URLs, multipart local uploads, task start, terminal-status polling, latest-record reuse, history search, and bounded retry behavior.
+- Added common failure guidance so agents do not confuse upload with transcription, submit local paths as URLs, poll indefinitely, or return previews as full text.
+
 ## 0.8.0 - 2026-08-21
 
 - Rebound the audited frontend to `cbe06ab` and backend to `692affd`.
