@@ -6,6 +6,7 @@ Permission gate: `rhizome-agent`. Access requires `Rhizome Agent` in `accessible
 
 ## Responsibilities
 
+- Accept a prediction question or research topic, perform reasoning and research with the selected workflow, and return a direct answer supported by the gathered evidence.
 - DigClaw-native page for running the deployed Rhizome agent at `VUE_APP_RHIZOME_AGENT_URL` or `https://rhizome.diggen.cn/`.
 - Health check, optional file upload, task submission, streamed execution logs, and final answer display.
 - The page is not an iframe. It calls Rhizome API endpoints directly from the frontend, so Rhizome UI style changes do not change the DigClaw page.
@@ -54,6 +55,8 @@ Response fields used by the frontend:
 | `size_bytes` | Optional display/debug info. |
 
 ## Run Task
+
+Put the user's prediction question or research topic in `task`. Preserve the requested scope, timeframe, assumptions, and answer format. For prediction questions, ask the agent to state its conclusion and main reasoning/evidence; for research topics, ask it to synthesize findings into a direct answer rather than only listing search activity.
 
 Preferred endpoint:
 

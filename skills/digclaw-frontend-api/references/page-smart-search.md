@@ -16,6 +16,8 @@ Permission gate: `smart-search`. For company search operations also check `smart
 
 When a user asks to search companies, prefer Company Keyword Search when the request can be expressed as keywords, tags, China/non-China scope, or advanced filters. Tell the user that the current Smart Search natural-language mode can take longer because it submits an async task and requires history polling, but it remains available when they want semantic query expansion or a less structured query.
 
+Before the first request, derive multiple plausible keyword formulations from the user's intent. Search the strongest formulation first, assess actual record relevance, then use alternate synonyms, bilingual terms, abbreviations, adjacent categories, product names, or relaxed non-essential constraints when the initial results are insufficient. Preserve explicit hard constraints. For each useful formulation, request subsequent `page` values while more records remain and additional coverage is valuable; merge and deduplicate results by company ID. A successful but irrelevant first response is not a stopping condition.
+
 ## Initial Load
 
 1. `GET /chat/user/permission`.
@@ -36,6 +38,7 @@ Use this first for normal company search requests. It returns result rows direct
 2. `POST /chat/company-vector/search`.
 3. Display returned rows.
 4. `POST /chat/user-record/add` with `tab: "公司"`, `searchType: "关键词搜索"`, and JSON `recordData`.
+5. When more rows are available, increment `page` and repeat; append and deduplicate records rather than replacing previously relevant matches.
 
 ### Company Natural-Language Search
 
@@ -83,3 +86,4 @@ Before using this path, tell the user it usually takes longer than keyword searc
 1. `POST /chat/search/talent-search` with params `{ inputText, mode: "result" }`.
 2. Display `data.data`.
 3. Refresh/save history for `tab: "个人"`.
+4. If results do not satisfy the request, retry with expanded role, skill, organization, domain, and bilingual keyword variants. Merge and deduplicate people across searches; use a paginated talent surface when broader coverage is required and this endpoint does not expose continuation.

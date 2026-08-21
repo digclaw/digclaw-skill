@@ -1,6 +1,6 @@
 ---
 name: digclaw-skill
-description: Use when operating DigClaw through the same API-backed capabilities exposed by the Vue frontend, working on DigClaw frontend API calls, backend integration, request debugging, or agent tasks that need page-facing DigClaw functions without browser clicking or legacy unused endpoints.
+description: Use when operating DigClaw through the same API-backed capabilities exposed by the Vue frontend, including Rhizome prediction/research, adaptive company or talent search, backend integration, request debugging, or other page-facing DigClaw functions without browser clicking or legacy unused endpoints.
 ---
 
 # DigClaw Skill
@@ -31,8 +31,23 @@ For detailed environment and request behavior, read `references/frontend-context
 9. Call endpoints directly with `scripts/digclaw_request.py` or an equivalent HTTP client.
 10. Preserve the frontend request wrapper behavior: `Authorization: Bearer <access_token>`, `clientid`, JSON payloads by default, and query params for GET.
 11. Verify the API response and summarize the result in user-facing terms.
-12. End every successful user-facing operation with 2-4 contextual next actions so the user knows what they can do next.
-13. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
+12. For company or talent discovery, do not stop after one literal query or the first result page. Apply the adaptive search strategy below unless the user explicitly requests an exact single-query lookup.
+13. End every successful user-facing operation with 2-4 contextual next actions so the user knows what they can do next.
+14. If an endpoint is not in the page guide or current page audit, verify that a current page/component imports it before documenting or using it.
+
+## Adaptive Company And Talent Search
+
+When the user wants to discover companies or people, translate their request into an initial set of search terms and useful variants before searching. Expand terms using relevant synonyms, abbreviations, English/Chinese equivalents, adjacent technologies, product or role names, industry labels, organizations, locations, and other constraints implied by the request.
+
+Search iteratively:
+
+1. Start with the most precise high-signal terms and preserve the user's hard constraints.
+2. Inspect the returned records for relevance, not merely whether the request succeeded.
+3. If a term returns few or irrelevant records, try additional expansions, alternate combinations, broader terms, or a different supported search mode. Do not repeatedly submit equivalent wording.
+4. Fetch later result pages when the response indicates more records and additional candidates could materially improve coverage. Deduplicate companies or people across terms and pages by stable ID when available.
+5. Stop when the results adequately answer the request, reasonable expansions are exhausted, or further pages become repetitive/low relevance. Summarize which query directions worked and distinguish strong matches from exploratory matches.
+
+Use the target page guide for its exact pagination fields and continuation behavior. Keyword expansion is an agent responsibility; do not require the user to supply every synonym or approve each routine retry.
 
 ## Version Updates
 
@@ -86,7 +101,7 @@ After each successful operation, suggest 2-4 relevant next actions based on the 
 - Shell/Auth/Files: login, user profile, settings, conversations, meeting minutes, file tokens
 - Smart Search / Company Cloud: company and talent search, history, detail, members, export, CSV tasks
 - AI Conversation Search: conversational company/talent search, streamed turns, history conversations, AI check, candidate export
-- Rhizome Agent: native DigClaw page backed by the deployed Rhizome API for research tasks, uploads, and streamed task logs
+- Rhizome Agent: accepts a prediction question or research topic, performs reasoning/research, and returns a supported answer; also supports optional uploads and streamed task logs
 - Talent Matrix: talent list/detail, favorites, annotations, connection status, connection text, export
 - Project Connectivity: project memo list/detail, paragraphs, attachments, reports, second analysis, FA collaboration
 - Venture Investment Directory: investor parse tasks, investor CRUD, attachments, opinions

@@ -11,6 +11,10 @@ Permission gate: `agent-conversation-search`. Access requires `AI Conversation S
 - Conversation history list/detail/delete.
 - Candidate pagination, AI check, web enrichment, profile/detail expansion, and CSV export from the visible candidate list.
 
+## Adaptive Search Guidance
+
+For company or talent discovery, proactively derive alternate keywords from the request and use the turn interaction/continuation flow to try them. Expand with synonyms, abbreviations, bilingual terms, adjacent domains, company/product categories, role titles, skills, organizations, and locations while preserving hard constraints. Evaluate candidate relevance after each turn. If candidates are insufficient, submit materially different keyword choices or continuation turns and request later candidate pages. Deduplicate by candidate type and stable ID. Stop when coverage is adequate or further turns/pages are repetitive or low-value.
+
 ## Initial Load
 
 1. Check `agent-conversation-search` permission.
@@ -61,4 +65,5 @@ Loaded conversation details hydrate messages, latest turn, current path, candida
 
 - Do not bypass the interaction prompts: if a turn returns ambiguity choices or keyword-selection requirements, submit the user's selected choices in the next turn payload.
 - AI check can run until enough qualified candidates are found. The frontend keeps rejected/checked state attached to candidates and may request more pages as needed.
+- A completed turn with weak candidates should trigger alternate keyword expansion or additional candidate pages rather than immediate completion.
 - Search path switching is limited once a conversation has active results; start a new conversation for a different independent search path.

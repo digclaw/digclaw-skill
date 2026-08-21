@@ -2,6 +2,12 @@
 
 Read this file when `scripts/check_updates.py` reports a newer version or when the user asks what changed.
 
+## 0.7.3 - 2026-08-21
+
+- Defined Rhizome Agent's primary role as answering prediction questions and research topics through reasoning and evidence-backed research.
+- Added proactive company and talent keyword expansion using synonyms, bilingual variants, adjacent concepts, roles, skills, organizations, products, and locations while preserving hard constraints.
+- Required relevance-based retries, later-page retrieval, cross-query deduplication, and sensible stopping conditions instead of stopping after the first successful query.
+
 ## 0.7.2 - 2026-08-20
 
 - Added environment credential priority for authenticated helper scripts: `--token`, `DIGCLAW_ACCESS_TOKEN`, account/password environment auto-login, then cached session.
